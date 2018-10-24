@@ -2,20 +2,18 @@ TheBestTeam Project Process Book
 ================================
 ## Proposal Document
 ### Basic Info
+
 Project Title: GoesHere
+
 TheBestTeam
 
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+| Team Members:    | Jonathon Pearson         | Richard Scott McNew           |
+|------------------|--------------------------|-------------------------------|
+| Email Addresses: | jnewellpearson@gmail.com | richard.scott.mcnew@gmail.com |
+| A Numbers:       | AJonathon's Anum         | A02077329                     |
 
-Team Members:  Jonathon Pearson, Richard Scott McNew
-Email Addresses: Jonathon's email, richard.scott.mcnew@gmail.com
-A#: AJonathon's Anum
 Project Git Repository:  https://github.com/rmcnew/TheBestTeamProject
-The project title, your names, e-mail addresses, UIDs, a link to the project repository
+
 ### Background and Motivation
 Discuss your motivations and reasons for choosing this project, especially any background or research interests that may have influenced your decision.
 ### Project Objectives
