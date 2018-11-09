@@ -1,0 +1,66 @@
+
+
+body {
+    font-family: 'Arial';
+}
+
+h1 {
+    font-family: 'Arial';
+    font-size:35px;
+    color: #464646;
+    margin: 0px;
+    padding: 0px;
+    margin-left: 20px;
+}
+
+.fullView{
+    display: inline-block;
+    width: 100%;
+}
+
+
+.brush .selection {
+    fill-opacity: .5;
+}
+
+.selected{
+    stroke: #404040;;
+    stroke-width:4;
+    r:20px;
+}
+
+
+h2{
+    -webkit-margin-before: 5px;
+    -webkit-margin-after:  5px;
+}
+.d3-tip {
+    /*line-height: 5;*/
+    padding-left: 10px;
+    padding-right: 10px;
+    min-width: 400px;
+    border-style: groove;
+    /*padding: 12px;*/
+    background: #FFFFFF;
+    color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    pointer-events: none;
+}
+.tooltip-title{
+    font-size:18px;
+    font-family: "Arial Black";
+
+}
+
+.tooltipDiv {
+    content: "\25BC";
+    border: 5px solid white;
+    border-radius: 10px;
+}
+
+h3{
+    text-anchor:middle;
+    font-size: 32px;
+}
+
+
