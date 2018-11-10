@@ -16,7 +16,7 @@ let tooltip = new Tooltip();
 
 
 // Load the data corresponding to all the ufo reports.
-d3.csv("data.csv").then(ufoReports => {
+d3.tsv("data.tsv").then(ufoReports => {
     window.ufoReports = ufoReports;
     console.log(ufoReports);
 
