@@ -14,7 +14,33 @@
 class UfoDatabase { 
 
     constructor(ufoReports) {
-
+        // create the database
+        this.database = openDatabase('ufoReportDatabase', '1.0', 'UFO Report Explorer Database', 50 * 1024 * 1024, function() {
+            console.log("Database opened!");
+        });
+        // create and populate the UFO_REPORTS table
+        this.database.transaction(function(tx) {
+            tx.executeSql('CREATE TABLE IF NOT EXISTS UFO_REPORTS (ID UNIQUE, OCCURRED STRING, REPORTED STRING, LOCATION STRING, LATITUDE REAL, LONGITUDE REAL, DURATION TEXT, SHAPE TEXT, NARRATIVE TEXT)');
+            console.log("Table created!");
+            let reportId = 1;
+            ufoReports.forEach( row => {
+                tx.executeSql('INSERT OR REPLACE INTO UFO_REPORTS (ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                              [reportId, row.Occurred, row.Reported, row.Location, row.Latitude, row.Longitude, row.Duration, row.Shape, row.Narrative]);
+                reportId++;
+            });
+            console.log("Table populated!");
+        });
+        // create the initial version of window.selectedData
+        this.database.transaction(function(tx) {
+            let result = [];
+            tx.executeSql('SELECT * FROM UFO_REPORTS', [], function(tx, data) {
+                for (let i = 0; i < data.rows.length; i++) {
+                    result.push(data.rows[i]);
+                }
+            });
+            window.selectedData = result;
+            console.log("window.selectedData ready!");
+        });
     }
 
     updateSelectedData(filterParameters) {
