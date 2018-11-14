@@ -18,7 +18,30 @@ class DateSelector {
         this.maxDate = d3.max(window.ufoReports, d => d.Occurred);
         console.log("min date: " + this.minDate);
         console.log("max date: " + this.maxDate);
-        let dateSelector = d3.select("#date-selector");
+		// create a scale for the date range
+		d3.select("#date-selector").append("input")
+			.attr("id", "date-selector-lower")
+			.attr("type", "range")
+			.attr("multiple", "")
+			.attr("class", "multirange original")
+			.attr("value", "10")
+			.on("input", function() {
+				d3.select("#date-selector-upper")
+					.style("--low", d3.select("#date-selector-lower").property("value"));
+			});
+		d3.select("#date-selector").append("input")
+			.attr("id", "date-selector-upper")
+			.attr("type", "range")
+			.attr("multiple", "")
+			.attr("class", "multirange ghost")
+			.style("--low", "11%")
+			.style("--high","79%")
+			.attr("value", "80")
+			.on("input", function() {
+				d3.select("#date-selector-upper")
+					.style("--high", d3.select("#date-selector-upper").property("value"));
+			});
+
     }
 
     update() {
