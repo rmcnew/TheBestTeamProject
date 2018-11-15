@@ -18,7 +18,19 @@ class DateSelector {
         this.maxDate = d3.max(window.ufoReports, d => d.Occurred);
         console.log("min date: " + this.minDate);
         console.log("max date: " + this.maxDate);
+
+		d3.select("#startDate")
+			.property("value", this.minDate)
+			.attr("min", this.minDate)
+			.attr("max", this.maxDate);
+
+		d3.select("#stopDate")
+			.property("value", this.maxDate)
+			.attr("min", this.minDate)
+			.attr("max", this.maxDate);
+
         let dateSelector = d3.select("#date-selector");
+        dateSelector.append("br");
 		dateSelector.append("input")
 			.attr("id", "date-selector-lower")
 			.attr("type", "range")
@@ -45,11 +57,11 @@ class DateSelector {
         let svg = dateSelector.append("svg")
             .attr("height", "20")
             .attr("width", dateSelector.node().getBoundingClientRect().width);
-        this.dateScale = d3.scaleTime()
+        let dateScale = d3.scaleTime()
             .domain([this.minDate, this.maxDate])
             .range([0, dateSelector.node().getBoundingClientRect().width]);
-        this.dateAxis = d3.axisBottom(this.dateScale);
-        svg.append(dateScale);
+        let dateAxis = d3.axisBottom(dateScale);
+        svg.append("g").call(dateAxis);
 
     }
 
