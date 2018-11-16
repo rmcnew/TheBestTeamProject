@@ -75,6 +75,13 @@ h3{
 	font-size: 32px;
 }
 
+input#startDate {
+	background-color: palegreen;
+}
+
+input#stopDate {
+	background-color: pink;
+}
 
 input[type="range"].multirange {
 	padding: 0;
@@ -83,17 +90,26 @@ input[type="range"].multirange {
 	vertical-align: top;
 }
 
-input[type="range"].multirange.original {
+input[type="range"].multirange.lower {
 	position: absolute;
 }
 
-input[type="range"].multirange.original::-webkit-slider-thumb {
+input[type="range"]#date-selector-lower::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	box-sizing: content-box;
 	position: relative;
 	z-index: 2;
+    background: palegreen;
+    cursor: pointer;
 }
 
-
-input[type="range"].multirange.ghost {
+input[type="range"].multirange.upper {
 	position: relative;
 }
 
+input[type="range"]#date-selector-upper::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	box-sizing: content-box;
+    background: pink;
+    cursor: pointer;
+}

@@ -23,12 +23,22 @@ class DateSelector {
 		d3.select("#startDate")
 			.property("value", this.minDate)
 			.attr("min", this.minDate)
-			.attr("max", this.maxDate);
+			.attr("max", this.maxDate)
+            .on("change", function() {
+                d3.select("#date-selector-lower")
+                    .property("value", window.dateSelector.dateScale(
+                        new Date(d3.select("#startDate").property("value")))); 
+            });
 
 		d3.select("#stopDate")
 			.property("value", this.maxDate)
 			.attr("min", this.minDate)
-			.attr("max", this.maxDate);
+			.attr("max", this.maxDate)
+            .on("change", function() {
+                d3.select("#date-selector-upper")
+                    .property("value", window.dateSelector.dateScale(
+                        new Date(d3.select("#stopDate").property("value")))); 
+            });
 
         let dateSelectorDiv = d3.select("#date-selector");
 		// create a scale for the date range
@@ -43,12 +53,13 @@ class DateSelector {
             .attr("min", "0")
             .attr("max", rangeWidth)
 			.attr("multiple", "")
-			.attr("class", "multirange original")
+			.attr("class", "multirange lower")
             .style("width", rangeWidth)
 			.property("value", this.dateScale(new Date(this.minDate)))
             .on("input", function() {
                 d3.select("#startDate")
-                    .property("value", window.dateSelector.dateScale.invert(d3.select("#date-selector-lower").property("value")).toISOString());
+                    .property("value", window.dateSelector.dateScale.invert(
+                        d3.select("#date-selector-lower").property("value")).toShortIsoString());
             });
 		dateSelectorDiv.append("input")
 			.attr("id", "date-selector-upper")
@@ -56,18 +67,23 @@ class DateSelector {
             .attr("min", "0")
             .attr("max", rangeWidth)
 			.attr("multiple", "")
-			.attr("class", "multirange ghost")
+			.attr("class", "multirange upper")
             .style("width", rangeWidth)
             .property("value", this.dateScale(new Date(this.maxDate)))
             .on("input", function() {
                 d3.select("#stopDate")
-                    .property("value", window.dateSelector.dateScale.invert(d3.select("#date-selector-upper").property("value")).toISOString());
+                    .property("value", window.dateSelector.dateScale.invert(
+                        d3.select("#date-selector-upper").property("value")).toShortIsoString());
             });
         let svg = dateSelectorDiv.append("svg")
             .attr("height", "20")
-            .attr("width", rangeWidth);
-        let dateAxis = d3.axisBottom(this.dateScale);
-        svg.append("g").call(dateAxis);
+            .attr("width", dateSelectorDiv.node().getBoundingClientRect().width);
+        let dateAxis = d3.axisBottom(this.dateScale)
+			.tickSize(10)
+			.ticks(d3.timeYear.every(10));
+        svg.append("g")
+			.attr("transform", "scale(1.11 1)")
+			.call(dateAxis);
 
     }
 

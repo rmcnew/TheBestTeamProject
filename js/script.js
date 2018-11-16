@@ -11,6 +11,26 @@
 /* Turn-on strict mode for easier debugging */
 'use strict';
 
+// Add a custom toString method to the Date prototype
+if (!Date.prototype.toShortIsoString) {
+  (function() {
+    function pad(number) {
+      if (number < 10) {
+        return '0' + number;
+      }
+      return number;
+    }
+
+    Date.prototype.toShortIsoString = function() {
+      return this.getUTCFullYear() +
+        '-' + pad(this.getUTCMonth() + 1) +
+        '-' + pad(this.getUTCDate()) +
+        'T' + pad(this.getUTCHours()) +
+        ':' + pad(this.getUTCMinutes());     
+	};
+  }());
+}
+
 let tooltip = new Tooltip();
 
 
