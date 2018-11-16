@@ -63,4 +63,20 @@ h3{
     font-size: 32px;
 }
 
+.map {
+    width:auto;
+    height:550px;
+    border:double;
+    background-color: lightblue;
+}
 
+.state {
+    stroke: black;
+    fill: none;
+    stroke-width: 2;
+}
+
+.county {
+    stroke: #f7f7f7;
+    fill: lightgrey;
+}

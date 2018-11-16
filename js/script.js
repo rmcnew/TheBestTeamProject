@@ -12,8 +12,15 @@
 'use strict';
 
 let tooltip = new Tooltip();
+let map = new Map(d3.geoAlbersUsa(), 1000, 500);
 
-
+d3.json("data_map/usStates.json")
+    .then(function (states) {
+        d3.json("data_map/usCounties.json")
+            .then(function (counties) {
+                map.drawMap(states, counties);
+            })
+    });
 
 // Load the data corresponding to all the ufo reports.
 d3.csv("data.csv").then(ufoReports => {
