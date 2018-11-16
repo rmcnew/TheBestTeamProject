@@ -75,11 +75,6 @@ h3{
 	font-size: 32px;
 }
 
-#startDateGroup {
-}
-
-#stopDateGroup {
-}
 
 input[type="range"].multirange {
 	padding: 0;
@@ -100,12 +95,5 @@ input[type="range"].multirange.original::-webkit-slider-thumb {
 
 input[type="range"].multirange.ghost {
 	position: relative;
-	background: var(--track-background);
-	--track-background: linear-gradient(to right, transparent var(--low), var(--range-color) 0, var(--range-color) var(--high), transparent 0) no-repeat 0 45% / 100% 40%;
-	--range-color: hsl(190, 80%, 40%);
-}
-
-input[type="range"].multirange.ghost::-webkit-slider-runnable-track {
-	background: var(--track-background);
 }
 
