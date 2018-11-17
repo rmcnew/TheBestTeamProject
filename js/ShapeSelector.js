@@ -14,11 +14,17 @@
 class ShapeSelector {
 
     constructor() {
-
+        // since the shapes are static we simply put
+        // static checkboxes into the html 
     }
 
-    update() {
-
+    getQueryParameters() {
+        let checkedNames = d3.selectAll(".shapeCheckbox")
+            .nodes()
+            .filter( x => x.checked)
+            .map( x => { return "'" + x.name + "'";}); 
+        return "SHAPE IN (" + checkedNames.join(", ") + ")";
     }
+
 
 }

@@ -20,12 +20,12 @@ class UfoDatabase {
         });
         // create and populate the UFO_REPORTS table
         this.database.transaction(function(tx) {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS UFO_REPORTS (ID UNIQUE, OCCURRED STRING, REPORTED STRING, LOCATION STRING, LATITUDE REAL, LONGITUDE REAL, DURATION TEXT, SHAPE TEXT, NARRATIVE TEXT)');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS UFO_REPORTS (ID UNIQUE, OCCURRED TEXT, OCCURRED_EPOCH INTEGER, REPORTED TEXT, REPORTED_EPOCH INTEGER, LOCATION STRING, LATITUDE REAL, LONGITUDE REAL, DURATION TEXT, SHAPE TEXT, NARRATIVE TEXT)');
             console.log("Table created!");
             let reportId = 1;
             ufoReports.forEach( row => {
-                tx.executeSql('INSERT OR REPLACE INTO UFO_REPORTS (ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                              [reportId, row.Occurred, row.Reported, row.Location, row.Latitude, row.Longitude, row.Duration, row.Shape, row.Narrative]);
+                tx.executeSql('INSERT OR REPLACE INTO UFO_REPORTS (ID, OCCURRED, OCCURRED_EPOCH, REPORTED, REPORTED_EPOCH, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                              [reportId, row.Occurred, new Date(row.Occurred).getTime(), row.Reported, new Date(row.Reported).getTime(), row.Location, row.Latitude, row.Longitude, row.Duration, row.Shape, row.Narrative]);
                 reportId++;
             });
             console.log("Table populated!");
@@ -33,7 +33,7 @@ class UfoDatabase {
         // create the initial version of window.selectedData
         this.database.transaction(function(tx) {
             let result = [];
-            tx.executeSql('SELECT * FROM UFO_REPORTS', [], function(tx, data) {
+            tx.executeSql('SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS', [], function(tx, data) {
                 for (let i = 0; i < data.rows.length; i++) {
                     result.push(data.rows[i]);
                 }
@@ -43,8 +43,34 @@ class UfoDatabase {
         });
     }
 
-    updateSelectedData(filterParameters) {
+    runQuery(query) {
+        this.database.transaction(function(tx) {
+            let result = [];
+            tx.executeSql(query, [], function(tx, data) {
+                for (let i = 0; i < data.rows.length; i++) {
+                    result.push(data.rows[i]);
+                }
+            });
+            window.selectedData = result;
+            console.log("query result in window.selectedData ready!");
+        });
+    }
 
+    updateSelectedData() {
+        let dateClause = window.dateSelector.getQueryParameters();
+        let shapeClause = window.shapeSelector.getQueryParameters();
+        let query = 'SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS WHERE ' + dateClause + ' AND ' + shapeClause;
+        console.log("Running query: " + query);
+        this.database.transaction(function(tx) {
+            let result = [];
+            tx.executeSql(query, [], function(tx, data) {
+                for (let i = 0; i < data.rows.length; i++) {
+                    result.push(data.rows[i]);
+                }
+            });
+            window.selectedData = result;
+            console.log("query result in window.selectedData ready!");
+        });
     }
 
 }
