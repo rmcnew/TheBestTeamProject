@@ -113,3 +113,13 @@ input[type="range"]#date-selector-upper::-webkit-slider-thumb {
     background: pink;
     cursor: pointer;
 }
+
+/*
+div#detail-panel {
+    width: 20vh;
+    height: 100%;
+	right: 0;
+    overflow-y: scroll;
+    overflow-x:hidden;
+}
+*/

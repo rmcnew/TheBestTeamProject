@@ -16,22 +16,20 @@ class UfoDatabase {
     constructor(ufoReports) {
         // create the database
         this.database = openDatabase('ufoReportDatabase', '1.0', 'UFO Report Explorer Database', 50 * 1024 * 1024, function() {
-            console.log("Database opened!");
+            //console.log("Database opened!");
         });
         // create and populate the UFO_REPORTS table
         this.database.transaction(function(tx) {
             tx.executeSql('CREATE TABLE IF NOT EXISTS UFO_REPORTS (ID UNIQUE, OCCURRED TEXT, OCCURRED_EPOCH INTEGER, REPORTED TEXT, REPORTED_EPOCH INTEGER, LOCATION STRING, LATITUDE REAL, LONGITUDE REAL, DURATION TEXT, SHAPE TEXT, NARRATIVE TEXT)');
-            console.log("Table created!");
+            //console.log("Table created!");
             let reportId = 1;
             ufoReports.forEach( row => {
                 tx.executeSql('INSERT OR REPLACE INTO UFO_REPORTS (ID, OCCURRED, OCCURRED_EPOCH, REPORTED, REPORTED_EPOCH, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                               [reportId, row.Occurred, new Date(row.Occurred).getTime(), row.Reported, new Date(row.Reported).getTime(), row.Location, row.Latitude, row.Longitude, row.Duration, row.Shape, row.Narrative]);
                 reportId++;
             });
-            console.log("Table populated!");
-        });
-        // create the initial version of window.selectedData
-        this.database.transaction(function(tx) {
+            //console.log("Table populated!");
+        	// create the initial version of window.selectedData
             let result = [];
             tx.executeSql('SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS', [], function(tx, data) {
                 for (let i = 0; i < data.rows.length; i++) {
@@ -40,8 +38,17 @@ class UfoDatabase {
             });
             window.selectedData = result;
             console.log("window.selectedData ready!");
+			// get narratives for detail panel
+			let narratives = [];
+            tx.executeSql('SELECT ID, NARRATIVE FROM UFO_REPORTS', [], function(tx, data) {
+                for (let i = 0; i < data.rows.length; i++) {
+                    narratives.push(data.rows[i]);
+                }
+            });
+			window.ufoDetails = new UfoDetails(narratives);
         });
     }
+
 
     runQuery(query) {
         this.database.transaction(function(tx) {

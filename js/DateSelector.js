@@ -17,8 +17,8 @@ class DateSelector {
         this.minDate = d3.min(window.ufoReports, d => d.Occurred);
         this.maxDate = d3.max(window.ufoReports, d => d.Occurred);
         let widthScaleFactor = 0.8;
-        console.log("min date: " + this.minDate);
-        console.log("max date: " + this.maxDate);
+        //console.log("min date: " + this.minDate);
+        //console.log("max date: " + this.maxDate);
 
 		d3.select("#startDate")
 			.property("value", this.minDate)

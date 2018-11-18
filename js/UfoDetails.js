@@ -13,9 +13,18 @@
 
 class UfoDetails {
 
-    constructor() {
-
+    constructor(detailsArray) {
+		console.log("detailsArray is: ");
+		console.log(detailsArray);
+		detailsArray.forEach( x => {
+			console.log("Processing detail: " + x.id + ", " + x.narrative);
+			d3.select("#detail-panel").append("p")
+			.text(x => x.narrative)
+			.attr("id", "narrative_" + x.id);
+		});
+		console.log("populateDetails complete!");
     }
+
 
     update() {
 
