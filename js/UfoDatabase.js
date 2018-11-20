@@ -38,29 +38,23 @@ class UfoDatabase {
             });
             window.selectedData = result;
             console.log("window.selectedData ready!");
-			// get narratives for detail panel
-			let narratives = [];
-            tx.executeSql('SELECT ID, NARRATIVE FROM UFO_REPORTS', [], function(tx, data) {
-                for (let i = 0; i < data.rows.length; i++) {
-                    narratives.push(data.rows[i]);
-                }
-            });
-			window.ufoDetails = new UfoDetails(narratives);
+
         });
+
     }
 
 
     runQuery(query) {
+        let result = [];
         this.database.transaction(function(tx) {
-            let result = [];
             tx.executeSql(query, [], function(tx, data) {
                 for (let i = 0; i < data.rows.length; i++) {
                     result.push(data.rows[i]);
                 }
             });
-            window.selectedData = result;
-            console.log("query result in window.selectedData ready!");
         });
+        console.log("query result ready!");
+        return result;
     }
 
     updateSelectedData() {

@@ -13,14 +13,12 @@
 
 class UfoDetails {
 
-    constructor(detailsArray) {
-		console.log("detailsArray is: ");
-		console.log(detailsArray);
-		detailsArray.forEach( x => {
-			console.log("Processing detail: " + x.id + ", " + x.narrative);
+    constructor() {
+		window.selectedData.forEach( x => {
+			console.log(`Adding UFO details: ID: ${x.id}, Narrative: ${x.narrative}`);
 			d3.select("#detail-panel").append("p")
-			.text(x => x.narrative)
-			.attr("id", "narrative_" + x.id);
+				.attr("id", "narrative_" + x.id)
+				.text(x => x.narrative);
 		});
 		console.log("populateDetails complete!");
     }
