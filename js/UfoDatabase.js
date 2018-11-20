@@ -19,6 +19,7 @@ class UfoDatabase {
             //console.log("Database opened!");
         });
         // create and populate the UFO_REPORTS table
+        let result = [];
         this.database.transaction(function(tx) {
             tx.executeSql('CREATE TABLE IF NOT EXISTS UFO_REPORTS (ID UNIQUE, OCCURRED TEXT, OCCURRED_EPOCH INTEGER, REPORTED TEXT, REPORTED_EPOCH INTEGER, LOCATION STRING, LATITUDE REAL, LONGITUDE REAL, DURATION TEXT, SHAPE TEXT, NARRATIVE TEXT)');
             //console.log("Table created!");
@@ -30,17 +31,15 @@ class UfoDatabase {
             });
             //console.log("Table populated!");
         	// create the initial version of window.selectedData
-            let result = [];
             tx.executeSql('SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS', [], function(tx, data) {
                 for (let i = 0; i < data.rows.length; i++) {
                     result.push(data.rows[i]);
                 }
+                window.ufoDetails = new UfoDetails(result);
+                window.selectedData = result;
             });
-            window.selectedData = result;
             console.log("window.selectedData ready!");
-
         });
-
     }
 
 
@@ -69,8 +68,8 @@ class UfoDatabase {
                     result.push(data.rows[i]);
                 }
             });
-            window.selectedData = result;
-            console.log("query result in window.selectedData ready!");
+            this.selectedData = result;
+            console.log("query result in selectedData ready!");
         });
     }
 

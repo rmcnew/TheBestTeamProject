@@ -11,17 +11,6 @@
 /* Turn-on strict mode for easier debugging */
 'use strict';
 
-// wait until a global variable is ready, then 
-// execute the callback function
-var waitForGlobal = function(key, callback) {
-  if (window[key]) {
-    callback();
-  } else {
-    setTimeout(function() {
-      waitForGlobal(key, callback);
-    }, 100);
-  }
-}
 
 // Add a custom toString method to the Date prototype
 if (!Date.prototype.toShortIsoString) {
@@ -57,6 +46,3 @@ d3.tsv("data.tsv").then(ufoReports => {
     window.ufoDurationGraph = new UfoDurationGraph();
 });
 
-waitForGlobal("selectedData", function() {
-	window.ufoDetails = new UfoDetails();
-});

@@ -13,12 +13,14 @@
 
 class UfoDetails {
 
-    constructor() {
-		window.selectedData.forEach( x => {
-			console.log(`Adding UFO details: ID: ${x.id}, Narrative: ${x.narrative}`);
-			d3.select("#detail-panel").append("p")
-				.attr("id", "narrative_" + x.id)
-				.text(x => x.narrative);
+    constructor(data) {
+        //console.log("data is:");
+        //console.log(data);
+		data.forEach( x => {
+			//console.log(`Adding UFO details: ID: ${x.ID}, Narrative: ${x.NARRATIVE}`);
+			d3.select("div#detail-panel").append("p")
+				.attr("id", "narrative_" + x.ID)
+				.text("(" + x.ID + ")  " + x.NARRATIVE);
 		});
 		console.log("populateDetails complete!");
     }
