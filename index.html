@@ -9,12 +9,12 @@
 
     Copyright (C) 2018, Jonathon Pearson.
     Copyright (C) 2018, Richard Scott McNew.  
-
 -->
     <head>
         <meta charset="UTF-8">
         <title>UFO Report Explorer</title>
         <link rel="stylesheet" href="style.css"/>
+        <link rel="shortcut icon" href="favicon.png">
         <script src="js/d3.js"></script>
         <script src="js/d3-tip.js"></script>
         <script src="js/map.js"></script>
@@ -25,10 +25,57 @@
         <p class="info">Name: Jonathon Pearson; E-Mail: jnewellpearson@gmail.com; A#: A01108018</p>
         <p class="info">Name: Richard Scott McNew; E-Mail: richard.scott.mcnew@gmail.com; A#: A02077329</p>
 
-        <div id="date-selector" class="fullView">
-        </div>
+		<div id="date-selector" class="fullView">
+            <label for="startDate">Start Date</label>
+            <input type="datetime" id="startDate" name="startDate" class="dateSelect"/>	
+            <label for="stopDate">Stop Date</label>
+            <input type="datetime" id="stopDate" name="stopDate" class="dateSelect"/>	
+		</div>
 
-		<div id="ufo-shape-selector" class="view">
+        <label for="UfoShapeSelector">UFO Shape Selector</label>
+		<div id="ufo-shape-selector" class="view" name="UfoShapeSelector">
+            <span>
+                <input type="checkbox" id="Changing" name="Changing" class="shapeCheckbox" checked/>
+                <label for="Changing">Changing</label>
+                <input type="checkbox" id="Circle" name="Circle" class="shapeCheckbox" checked/>
+                <label for="Circle">Circle</label>
+                <input type="checkbox" id="Cone" name="Cone" class="shapeCheckbox" checked/>
+                <label for="Cone">Cone</label>
+                <input type="checkbox" id="Cresent" name="Cresent" class="shapeCheckbox" checked/>
+                <label for="Cresent">Cresent</label>
+                <input type="checkbox" id="Cross" name="Cross" class="shapeCheckbox" checked/>
+                <label for="Cross">Cross</label>
+                <input type="checkbox" id="Cylinder" name="Cylinder" class="shapeCheckbox" checked/>
+                <label for="Cylinder">Cylinder</label>
+            </span>
+            <span>
+                <input type="checkbox" id="Diamond" name="Diamond" class="shapeCheckbox" checked/>
+                <label for="Diamond">Diamond</label>
+                <input type="checkbox" id="Disk" name="Disk" class="shapeCheckbox" checked/>
+                <label for="Disk">Disk</label>
+                <input type="checkbox" id="Fireball" name="Fireball" class="shapeCheckbox" checked/>
+                <label for="Fireball">Fireball</label>
+                <input type="checkbox" id="Flash" name="Flash" class="shapeCheckbox" checked/>
+                <label for="Flash">Flash</label>
+                <input type="checkbox" id="Formation" name="Formation" class="shapeCheckbox" checked/>
+                <label for="Formation">Formation</label>
+                <input type="checkbox" id="Hexagon" name="Hexagon" class="shapeCheckbox" checked/>
+                <label for="Hexagon">Hexagon</label>
+            </span>
+            <span>
+                <input type="checkbox" id="Light" name="Light" class="shapeCheckbox" checked/>
+                <label for="Light">Light</label>
+                <input type="checkbox" id="Other" name="Other" class="shapeCheckbox" checked/>
+                <label for="Other">Other</label>
+                <input type="checkbox" id="Oval" name="Oval" class="shapeCheckbox" checked/>
+                <label for="Oval">Oval</label>
+                <input type="checkbox" id="Rectangle" name="Rectangle" class="shapeCheckbox" checked/>
+                <label for="Rectangle">Rectangle</label>
+                <input type="checkbox" id="Teardrop" name="Teardrop" class="shapeCheckbox" checked/>
+                <label for="Teardrop">Teardrop</label>
+                <input type="checkbox" id="Triangle" name="Triangle" class="shapeCheckbox" checked/>
+                <label for="Triangle">Triangle</label>
+            </span>
 		</div>
 		
         <div id = "map" class = "view">
@@ -44,7 +91,13 @@
         </div>
 
         <script type="application/javascript" src="js/tooltip.js"></script>
-		<!-- Other classes go here-->
         <script type="application/javascript" src="js/script.js"></script>
+        <script type="application/javascript" src="js/UfoDatabase.js"></script>
+        <script type="application/javascript" src="js/DateSelector.js"></script>
+        <script type="application/javascript" src="js/ShapeSelector.js"></script>
+        <script type="application/javascript" src="js/UfoMap.js"></script>
+        <script type="application/javascript" src="js/UfoDetails.js"></script>
+        <script type="application/javascript" src="js/UfoCountGraph.js"></script>
+        <script type="application/javascript" src="js/UfoDurationGraph.js"></script>
     </body>
 </html>
