@@ -8,6 +8,8 @@
         this.projection = projection;
         this.width = width;
         this.height = height;
+
+        this.ufoSightingDB = openDatabase("ufoSightingDB", "1.0", "UFO Sighting Database", 2 * 1024 * 1024);
     }
 
     clearMap() {
@@ -16,8 +18,71 @@
     }
 
     updateMap(ufoSightingData) {
-        //Clear any previous selections;
-        this.clearMap();
+
+        // create the table
+        this.ufoSightingDB.transaction(function (trans) {
+            // create the table
+            trans.executeSql('DROP TABLE IF EXISTS Sighting');
+
+            trans.executeSql('CREATE TABLE IF NOT EXISTS Sighting (id, sightingDate, reportDate, location, longitude, latitude, narrative, shape, duration)');
+
+            console.log("ufoSightingData Count:" + ufoSightingData.length);
+
+            // insert every item into the database
+            for (let i = 0; i < ufoSightingData.length; i++)
+            {
+                trans.executeSql('INSERT INTO Sighting (id, sightingDate, reportDate, location, longitude, latitude, narrative, shape, duration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [i, ufoSightingData[i].Occurred, ufoSightingData[i].Reported, ufoSightingData[i].Location, ufoSightingData[i].Longitude, ufoSightingData[i].Latitude, ufoSightingData[i].Narrative, ufoSightingData[i].Shape, ufoSightingData[i].Duration], successHandler, errorHandler);
+            }
+
+            function successHandler(transaction, sqlResult) {
+                console.log("Successfully inserted.");
+            };
+
+            function errorHandler(transaction, error) {
+                console.log("Error: " + error.message);
+            };
+
+        });
+
+        this.filterPoints();
+    }
+
+    filterPoints()
+    {
+        console.log("Filtering results.");
+
+        let projection = this.projection;
+
+        // get the filtered data set
+        this.ufoSightingDB.transaction(function (trans) {
+            console.log("Selecting data.");
+
+            trans.executeSql('SELECT id, sightingDate, reportDate, location, longitude, latitude, narrative, shape, duration FROM Sighting', [], function (trans, results) {
+                console.log("Retrieved data.");
+                // get the svg element for the map
+                let svg = d3.select("#mapSvg");
+
+                // get points in the map
+                let points = svg.selectAll("circle");
+
+                console.log("Result:" + results.rows);
+
+                // update the points with new data
+                points = points
+                    .data(results.rows)
+                    .enter()
+                    .append("circle")
+                    .attr("r", "5")
+                    .attr("cx", d => projection([d.longitude, d.latitude])[0])
+                    .attr("cy", d => projection([d.longitude, d.latitude])[1])
+                ;
+
+            }, errorHandler);
+
+            function errorHandler (transaction, error){
+                console.log("Error: " + error.message);
+            };
+        });
     }
 
     /**
@@ -51,10 +116,11 @@
             ;
         }
 
+        this.projection = this.projection.translate([width / 2, height / 2]);
 
         // create map control
         let path = d3.geoPath()
-          .projection(this.projection.translate([width / 2, height / 2]))
+          .projection(this.projection)
         ;
 
         // add counties

@@ -26,5 +26,5 @@ d3.json("data_map/usStates.json")
 d3.csv("data.csv").then(ufoReports => {
     window.ufoReports = ufoReports;
     console.log(ufoReports);
-
+    map.updateMap(ufoReports);
 });
