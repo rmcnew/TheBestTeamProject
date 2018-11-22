@@ -32,21 +32,20 @@ if (!Date.prototype.toShortIsoString) {
 }
 
 let tooltip = new Tooltip();
-let map = new Map(d3.geoAlbersUsa(), 1000, 500);
+window.Map = new Map(d3.geoAlbersUsa(), 1000, 500);
 
 d3.json("data_map/usStates.json")
     .then(function (states) {
         d3.json("data_map/usCounties.json")
             .then(function (counties) {
-                map.drawMap(states, counties);
+                window.Map.drawMap(states, counties);
             })
     });
 
 // Load the data corresponding to all the ufo reports.
 d3.tsv("data.tsv").then(ufoReports => {
     window.ufoReports = ufoReports;
-    console.log(ufoReports);
-    map.updateMap(ufoReports);
+    //console.log(ufoReports);
 
     window.ufoDatabase = new UfoDatabase(ufoReports);
     window.dateSelector = new DateSelector();
@@ -54,5 +53,6 @@ d3.tsv("data.tsv").then(ufoReports => {
     window.ufoMap = new UfoMap();
     window.ufoCountGraph = new UfoCountGraph();
     window.ufoDurationGraph = new UfoDurationGraph();
+    window.Map.updateMap();
 
 });

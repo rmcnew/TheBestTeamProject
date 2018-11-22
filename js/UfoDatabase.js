@@ -29,7 +29,11 @@ class UfoDatabase {
                               [reportId, row.Occurred, new Date(row.Occurred).getTime(), row.Reported, new Date(row.Reported).getTime(), row.Location, row.Latitude, row.Longitude, row.Duration, row.Shape, row.Narrative]);
                 reportId++;
             });
-            //console.log("Table populated!");
+            console.log("Table populated! Row Count:" + reportId.toString());
+
+        });
+
+        this.database.transaction(function(tx) {
         	// create the initial version of window.selectedData
             tx.executeSql('SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS', [], function(tx, data) {
                 for (let i = 0; i < data.rows.length; i++) {
@@ -42,18 +46,31 @@ class UfoDatabase {
         });
     }
 
-
-    runQuery(query) {
+    // This funciton requires a call back function that accepts an array as input
+    runQueryWithCallBack(query, callBack) {
         let result = [];
-        this.database.transaction(function(tx) {
-            tx.executeSql(query, [], function(tx, data) {
+
+        this.database.transaction(function (tx) {
+            tx.executeSql(query, [], function (tx, data) {
                 for (let i = 0; i < data.rows.length; i++) {
                     result.push(data.rows[i]);
                 }
+
+                console.log("query result ready!");
+
+                callBack(result);
+            }, function (transaction, error) {
+                console.log("Error while running query: " + error.message);
             });
         });
-        console.log("query result ready!");
+
         return result;
+    }
+
+    // because the websql database runs asynchornously, this function doesn't work
+    // use runQueryWithCallBack
+    runQuery(query) {
+        return this.runQueryWithCallBack(query, function (data) { });
     }
 
     updateSelectedData() {

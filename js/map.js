@@ -17,32 +17,7 @@
             .attr("class", null);
     }
 
-    updateMap(ufoSightingData) {
-
-        // create the table
-        this.ufoSightingDB.transaction(function (trans) {
-            // create the table
-            trans.executeSql('DROP TABLE IF EXISTS Sighting');
-
-            trans.executeSql('CREATE TABLE IF NOT EXISTS Sighting (id, sightingDate, reportDate, location, longitude, latitude, narrative, shape, duration)');
-
-            console.log("ufoSightingData Count:" + ufoSightingData.length);
-
-            // insert every item into the database
-            for (let i = 0; i < ufoSightingData.length; i++)
-            {
-                trans.executeSql('INSERT INTO Sighting (id, sightingDate, reportDate, location, longitude, latitude, narrative, shape, duration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [i, ufoSightingData[i].Occurred, ufoSightingData[i].Reported, ufoSightingData[i].Location, ufoSightingData[i].Longitude, ufoSightingData[i].Latitude, ufoSightingData[i].Narrative, ufoSightingData[i].Shape, ufoSightingData[i].Duration], successHandler, errorHandler);
-            }
-
-            function successHandler(transaction, sqlResult) {
-                console.log("Successfully inserted.");
-            };
-
-            function errorHandler(transaction, error) {
-                console.log("Error: " + error.message);
-            };
-
-        });
+    updateMap() {
 
         this.filterPoints();
     }
@@ -51,38 +26,36 @@
     {
         console.log("Filtering results.");
 
+        // get the filtered data set
+        console.log("Retrieved data.");
+
+        // get the projection we will use in our update function
         let projection = this.projection;
 
-        // get the filtered data set
-        this.ufoSightingDB.transaction(function (trans) {
-            console.log("Selecting data.");
-
-            trans.executeSql('SELECT id, sightingDate, reportDate, location, longitude, latitude, narrative, shape, duration FROM Sighting', [], function (trans, results) {
-                console.log("Retrieved data.");
+        function updateDataPoints(data)
+        {
+            if (typeof data !== "undefined") {
                 // get the svg element for the map
                 let svg = d3.select("#mapSvg");
 
                 // get points in the map
                 let points = svg.selectAll("circle");
 
-                console.log("Result:" + results.rows);
-
                 // update the points with new data
                 points = points
-                    .data(results.rows)
+                    .data(data)
                     .enter()
                     .append("circle")
                     .attr("r", "5")
-                    .attr("cx", d => projection([d.longitude, d.latitude])[0])
-                    .attr("cy", d => projection([d.longitude, d.latitude])[1])
+                    .attr("cx", d => projection([d.LONGITUDE, d.LATITUDE])[0])
+                    .attr("cy", d => projection([d.LONGITUDE, d.LATITUDE])[1])
                 ;
+            }
 
-            }, errorHandler);
+        };
 
-            function errorHandler (transaction, error){
-                console.log("Error: " + error.message);
-            };
-        });
+        window.ufoDatabase.runQueryWithCallBack('SELECT SUM(ID) AS SIGHTINGCOUNT, LATITUDE, LONGITUDE FROM UFO_REPORTS GROUP BY LATITUDE, LONGITUDE', updateDataPoints);
+
     }
 
     /**
