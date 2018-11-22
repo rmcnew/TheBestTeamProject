@@ -32,13 +32,13 @@ if (!Date.prototype.toShortIsoString) {
 }
 
 let tooltip = new Tooltip();
-window.Map = new Map(d3.geoAlbersUsa(), 1000, 500);
+window.ufoMap = new UfoMap(d3.geoAlbersUsa(), 1000, 500);
 
 d3.json("data_map/usStates.json")
     .then(function (states) {
         d3.json("data_map/usCounties.json")
             .then(function (counties) {
-                window.Map.drawMap(states, counties);
+                window.ufoMap.drawMap(states, counties);
             })
     });
 
@@ -47,12 +47,11 @@ d3.tsv("data.tsv").then(ufoReports => {
     window.ufoReports = ufoReports;
     //console.log(ufoReports);
 
-    window.ufoDatabase = new UfoDatabase(ufoReports);
-    window.dateSelector = new DateSelector();
     window.shapeSelector = new ShapeSelector();
-    window.ufoMap = new UfoMap();
+    window.dateSelector = new DateSelector();
+    window.ufoDatabase = new UfoDatabase(ufoReports);
     window.ufoCountGraph = new UfoCountGraph();
     window.ufoDurationGraph = new UfoDurationGraph();
-    window.Map.updateMap();
+    window.ufoMap.updateMap();
 
 });
