@@ -13,16 +13,18 @@
 
 class UfoDetails {
 
-    constructor(data) {
-        //console.log("data is:");
-        //console.log(data);
-		data.forEach( x => {
-			//console.log(`Adding UFO details: ID: ${x.ID}, Narrative: ${x.NARRATIVE}`);
-			d3.select("div#detail-panel").append("p")
-				.attr("id", "narrative_" + x.ID)
-				.text("(" + x.ID + ")  " + x.NARRATIVE);
-		});
-		console.log("populateDetails complete!");
+    constructor() {
+        let query = 'SELECT ID, NARRATIVE FROM UFO_REPORTS';
+        let callBack = function(data) {
+            data.forEach( x => {
+                //console.log(`Adding UFO details: ID: ${x.ID}, Narrative: ${x.NARRATIVE}`);
+                d3.select("div#detail-panel").append("p")
+                    .attr("id", "narrative_" + x.ID)
+                    .text("(" + x.ID + ")  " + x.NARRATIVE);
+            });
+            console.log("populateDetails complete!");
+        }
+        window.UfoDatabase.runQueryWithCallBack(query, callBack);
     }
 
 

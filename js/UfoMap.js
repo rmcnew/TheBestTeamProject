@@ -21,8 +21,6 @@ class UfoMap {
         this.projection = projection;
         this.width = width;
         this.height = height;
-
-        this.ufoSightingDB = openDatabase("ufoSightingDB", "1.0", "UFO Sighting Database", 2 * 1024 * 1024);
     }
 
     clearMap() {

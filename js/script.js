@@ -32,6 +32,7 @@ if (!Date.prototype.toShortIsoString) {
 }
 
 let tooltip = new Tooltip();
+window.ufoDatabase = new UfoDatabase();
 window.ufoMap = new UfoMap(d3.geoAlbersUsa(), 1000, 500);
 
 d3.json("data_map/usStates.json")
@@ -42,16 +43,8 @@ d3.json("data_map/usStates.json")
             })
     });
 
-// Load the data corresponding to all the ufo reports.
-d3.tsv("data.tsv").then(ufoReports => {
-    window.ufoReports = ufoReports;
-    //console.log(ufoReports);
-
-    window.shapeSelector = new ShapeSelector();
-    window.dateSelector = new DateSelector();
-    window.ufoDatabase = new UfoDatabase(ufoReports);
-    window.ufoCountGraph = new UfoCountGraph();
-    window.ufoDurationGraph = new UfoDurationGraph();
-    window.ufoMap.updateMap();
-
-});
+window.shapeSelector = new ShapeSelector();
+window.dateSelector = new DateSelector();
+window.ufoCountGraph = new UfoCountGraph();
+window.ufoDurationGraph = new UfoDurationGraph();
+window.ufoMap.updateMap();
