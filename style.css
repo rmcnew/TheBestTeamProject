@@ -137,6 +137,12 @@ div#detail-panel {
 
 }
 
+.point {
+    fill:forestgreen;
+    stroke:darkgreen;
+    stroke-width:2;
+}
+
 .county {
     stroke: #f7f7f7;
     fill: lightgrey;

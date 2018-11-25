@@ -21,6 +21,7 @@ class UfoMap {
         this.projection = projection;
         this.width = width;
         this.height = height;
+        this.maxSightings = null;
 
         this.ufoSightingDB = openDatabase("ufoSightingDB", "1.0", "UFO Sighting Database", 2 * 1024 * 1024);
     }
@@ -48,26 +49,53 @@ class UfoMap {
         function updateDataPoints(data)
         {
             if (typeof data !== "undefined") {
+
+                // set radious scales
+                let counts = data.map(d => d.SIGHTINGCOUNT);
+                let max = d3.max(counts);
+
+                let radiusScale = d3.scaleLinear()
+                  .domain([0, max])
+                  .range([1.5, 20])
+                ;
+
+                let opacityScale = d3.scaleLinear()
+                  .domain([0, max])
+                  .range([0.4, 1])
+                ;
+
+
                 // get the svg element for the map
                 let svg = d3.select("#mapSvg");
 
                 // get points in the map
-                let points = svg.selectAll("circle");
+                let points = svg.selectAll("circle")
+                    .data(data);
+
+                points.exit().remove();
 
                 // update the points with new data
                 points = points
                     .data(data)
                     .enter()
                     .append("circle")
-                    .attr("r", "5")
+                    .merge(points)
+                    .attr("r", d => radiusScale(d.SIGHTINGCOUNT))
                     .attr("cx", d => projection([d.LONGITUDE, d.LATITUDE])[0])
                     .attr("cy", d => projection([d.LONGITUDE, d.LATITUDE])[1])
+                    .attr("style", d=> "opacity: " + opacityScale(d.SIGHTINGCOUNT).toString())
+                    .classed("point", true)
                 ;
             }
 
         };
 
-        window.ufoDatabase.runQueryWithCallBack('SELECT SUM(ID) AS SIGHTINGCOUNT, LATITUDE, LONGITUDE FROM UFO_REPORTS GROUP BY LATITUDE, LONGITUDE', updateDataPoints);
+        // get shape clause
+        let dateClause = window.dateSelector.getQueryParameters();
+        let shapeClause = window.shapeSelector.getQueryParameters();
+
+        // get the values from the database
+        window.ufoDatabase.runQueryWithCallBack('SELECT SUM(ID) AS SIGHTINGCOUNT, LATITUDE, LONGITUDE FROM UFO_REPORTS WHERE ' + dateClause + ' AND ' + shapeClause + ' GROUP BY LATITUDE, LONGITUDE', updateDataPoints);
 
     }
 
