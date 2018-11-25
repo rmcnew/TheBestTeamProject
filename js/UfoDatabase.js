@@ -23,13 +23,13 @@ class UfoDatabase {
         this.database.transaction(function(tx) {
             tx.executeSql('CREATE TABLE IF NOT EXISTS UFO_REPORTS (ID UNIQUE, OCCURRED TEXT, OCCURRED_EPOCH INTEGER, REPORTED TEXT, REPORTED_EPOCH INTEGER, LOCATION STRING, LATITUDE REAL, LONGITUDE REAL, DURATION TEXT, SHAPE TEXT, NARRATIVE TEXT)');
             //console.log("Table created!");
-            let reportId = 1;
+            let lastRowId;
             ufoReports.forEach( row => {
                 tx.executeSql('INSERT OR REPLACE INTO UFO_REPORTS (ID, OCCURRED, OCCURRED_EPOCH, REPORTED, REPORTED_EPOCH, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                              [reportId, row.Occurred, new Date(row.Occurred).getTime(), row.Reported, new Date(row.Reported).getTime(), row.Location, row.Latitude, row.Longitude, row.Duration, row.Shape, row.Narrative]);
-                reportId++;
+                              [row.ID, row.Occurred, row.Occurred_Epoch, row.Reported, row.Reported_Epoch, row.Location, row.Latitude, row.Longitude, row.Duration, row.Shape, row.Narrative]);
+                lastRowId = row.ID;
             });
-            console.log("Table populated! Row Count:" + reportId.toString());
+            console.log("Table populated! Row Count:" + lastRowId);
 
         });
 
