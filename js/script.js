@@ -43,15 +43,11 @@ d3.json("data_map/usStates.json")
     });
 
 // Load the data corresponding to all the ufo reports.
-d3.tsv("data.tsv").then(ufoReports => {
-    window.ufoReports = ufoReports;
-    //console.log(ufoReports);
+window.shapeSelector = new ShapeSelector();
+window.dateSelector = new DateSelector();
+window.ufoDatabase = new UfoDatabase();
+window.ufoCountGraph = new UfoCountGraph();
+window.ufoDurationGraph = new UfoDurationGraph();
+window.ufoMap.updateMap();
+window.ufoDetails = new UfoDetails();
 
-    window.shapeSelector = new ShapeSelector();
-    window.dateSelector = new DateSelector();
-    window.ufoDatabase = new UfoDatabase(ufoReports);
-    window.ufoCountGraph = new UfoCountGraph();
-    window.ufoDurationGraph = new UfoDurationGraph();
-    window.ufoMap.updateMap();
-
-});

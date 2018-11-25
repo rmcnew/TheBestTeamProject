@@ -13,64 +13,30 @@
 
 class UfoDatabase { 
 
-    constructor(ufoReports) {
-        // create the database
-        this.database = openDatabase('ufoReportDatabase', '1.0', 'UFO Report Explorer Database', 50 * 1024 * 1024, function() {
-            //console.log("Database opened!");
-        });
-        // create and populate the UFO_REPORTS table
-        let result = [];
-        this.database.transaction(function(tx) {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS UFO_REPORTS (ID UNIQUE, OCCURRED TEXT, OCCURRED_EPOCH INTEGER, REPORTED TEXT, REPORTED_EPOCH INTEGER, LOCATION STRING, LATITUDE REAL, LONGITUDE REAL, DURATION TEXT, SHAPE TEXT, NARRATIVE TEXT)');
-            //console.log("Table created!");
-            let lastRowId;
-            ufoReports.forEach( row => {
-                tx.executeSql('INSERT OR REPLACE INTO UFO_REPORTS (ID, OCCURRED, OCCURRED_EPOCH, REPORTED, REPORTED_EPOCH, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                              [row.ID, row.Occurred, row.Occurred_Epoch, row.Reported, row.Reported_Epoch, row.Location, row.Latitude, row.Longitude, row.Duration, row.Shape, row.Narrative]);
-                lastRowId = row.ID;
-            });
-            console.log("Table populated! Row Count:" + lastRowId);
-
-        });
-
-        this.database.transaction(function(tx) {
-        	// create the initial version of window.selectedData
-            tx.executeSql('SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS', [], function(tx, data) {
-                for (let i = 0; i < data.rows.length; i++) {
-                    result.push(data.rows[i]);
-                }
-                window.ufoDetails = new UfoDetails(result);
-                window.selectedData = result;
-            });
-            console.log("window.selectedData ready!");
-        });
+    constructor() {
+        this.ufoDatabaseWorker = new Worker('js/UfoDatabaseWorker.js');
+        this.requestMap = new Map();        
+        this.nextRequestId = 1;
+        this.ufoDatabaseWorker.onmessage = (e) => {
+            //console.log("UfoDatabase: ready for callback:");
+            //console.log("e:");
+            //console.log(e);
+            let id = e.data.id;
+            let callBack = this.requestMap.get(id);
+            let result = e.data.query_result;
+            if (callBack instanceof Function) {
+                callBack(result);
+            }
+            this.requestMap.delete(id);
+        };
     }
 
     // This funciton requires a call back function that accepts an array as input
     runQueryWithCallBack(query, callBack) {
-        let result = [];
-
-        this.database.transaction(function (tx) {
-            tx.executeSql(query, [], function (tx, data) {
-                for (let i = 0; i < data.rows.length; i++) {
-                    result.push(data.rows[i]);
-                }
-
-                console.log("query result ready!");
-
-                callBack(result);
-            }, function (transaction, error) {
-                console.log("Error while running query: " + error.message);
-            });
-        });
-
-        return result;
-    }
-
-    // because the websql database runs asynchornously, this function doesn't work
-    // use runQueryWithCallBack
-    runQuery(query) {
-        return this.runQueryWithCallBack(query, function (data) { });
+        let requestObj = {"id": this.nextRequestId, "query":query};
+        this.requestMap.set(this.nextRequestId, callBack);
+        this.nextRequestId++; 
+        this.ufoDatabaseWorker.postMessage(requestObj);
     }
 
     updateSelectedData() {
@@ -78,13 +44,7 @@ class UfoDatabase {
         let shapeClause = window.shapeSelector.getQueryParameters();
         let query = 'SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS WHERE ' + dateClause + ' AND ' + shapeClause;
         console.log("Running query: " + query);
-        this.database.transaction(function(tx) {
-            let result = [];
-            tx.executeSql(query, [], function(tx, data) {
-                for (let i = 0; i < data.rows.length; i++) {
-                    result.push(data.rows[i]);
-                }
-            });
+        this.runQueryWithCallBack(query, function(result) {
             this.selectedData = result;
             console.log("query result in selectedData ready!");
         });
