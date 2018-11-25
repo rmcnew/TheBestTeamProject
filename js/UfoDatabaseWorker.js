@@ -18,9 +18,39 @@ let database = null;
 // Load the data corresponding to all the ufo reports.
 d3.tsv("../data.tsv").then(ufoReports => {
     // create the database
-    database = openDatabase('ufoReportDatabase', '1.0', 'UFO Report Explorer Database', 50 * 1024 * 1024, function() {
-        //console.log("Database opened!");
-    });
+    let openRequest = window.indexedDB.open('UfoReportDatabase', 1);
+    openRequest.onerror = function(e) {
+        console.error("Error opening UfoReportDatabase: " + e.target.errorCode);
+    };
+    openRequest.onsuccess = function(e) {
+        database = e.target.result;
+        console.log("Database opened!");
+    };
+    // populate the database if not present
+    openRequest.onupgradeneeded = function(e) {
+        database = e.target.result;
+        let objectStore = database.createObjectStore("UFO_Report_Database", { autoIncrement: true}); // generate auto-incremented ID key
+        // specify the fields to index for fast lookups
+        objectStore.createIndex("OCCURRED_Index", "OCCURRED", { unique: false });
+        objectStore.createIndex("OCCURRED_EPOCH_Index", "OCCURRED_EPOCH", { unique: false });
+        objectStore.createIndex("REPORTED_Index", "REPORTED", { unique: false });
+        objectStore.createIndex("REPORTED_EPOCH_Index", "REPORTED_EPOCH", { unique: false });
+        objectStore.createIndex("LOCATION_Index", "LOCATION", { unique: false });
+        objectStore.createIndex("LATITUDE_Index", "LATITUDE", { unique: false });
+        objectStore.createIndex("LONGITUDE_Index", "LONGITUDE", { unique: false });
+        objectStore.createIndex("DURATION_Index", "DURATION", { unique: false });
+        objectStore.createIndex("SHAPE_Index", "SHAPE", { unique: false });
+        // we will use lunr.js or similar for full-text searching of the narratives
+
+        // after the objectStore is provisioned, load the data
+        objectStore.transaction.oncomplete = function(e2) {
+            let ufoReportsObjectStore = database.transaction("UFO_Report_Database", "readwrite").objectStore("UFO_Report_Database");
+            ufoReports.forEach( function(report) {
+
+            });
+        };
+    };
+    
     // create and populate the UFO_REPORTS table
     database.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS UFO_REPORTS (ID UNIQUE, OCCURRED TEXT, OCCURRED_EPOCH INTEGER, REPORTED TEXT, REPORTED_EPOCH INTEGER, LOCATION STRING, LATITUDE REAL, LONGITUDE REAL, DURATION TEXT, SHAPE TEXT, NARRATIVE TEXT)');
