@@ -23,7 +23,7 @@ importScripts('sql.js');
 
 let dataLoaded = false;
 let queue = [];
-let database = new SQL.Database();
+let database = null;
 
 function processMessages() {
 	if (dataLoaded) {
@@ -69,6 +69,7 @@ function processMessages() {
 }
 
 function populateDatabaseFromTsv() {
+    database = new SQL.Database();
     // create and populate the UFO_REPORTS table
     let createStatement = 'CREATE TABLE IF NOT EXISTS UFO_REPORTS (ID INTEGER PRIMARY KEY, OCCURRED TEXT, OCCURRED_EPOCH INTEGER, REPORTED TEXT, REPORTED_EPOCH INTEGER, LOCATION STRING, LATITUDE REAL, LONGITUDE REAL, DURATION TEXT, SHAPE TEXT, NARRATIVE TEXT); ';
     /* creating indices greatly increases the time needed to populate the UFO_REPORTS table  */
@@ -119,12 +120,22 @@ function populateDatabaseFromTsv() {
 }
 
 function loadDatabaseFromDbFile(filename) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', filename, true);
+    xhr.responseType = 'arraybuffer';
 
+    xhr.onload = e => {
+        let uInt8Array = new Uint8Array(this.response);
+        database = new SQL.Database(uInt8Array);
+    };
+    xhr.send();
 }
 
 function saveDatabaseToDbFile(filename) {
 
 }
+
+populateDatabaseFromTsv();
 
 onmessage = (e) => {
     //console.log("UfoDatabaseWorker:  message received:");
