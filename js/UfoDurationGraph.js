@@ -14,7 +14,7 @@
 class UfoDurationGraph {
 
     constructor() {
-
+        
     }
 
     update() {
