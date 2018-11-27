@@ -22,7 +22,8 @@ class UfoMap {
         this.width = width;
         this.height = height;
         this.maxSightings = null;
-
+		this.updateTimeoutId = null;
+		this.dedupeInterval = 120; // milliseconds
     }
 
     clearMap() {
@@ -31,8 +32,12 @@ class UfoMap {
     }
 
     updateMap() {
-
-        this.filterPoints();
+		// de-duplicate update calls that are less than
+		// this.dedupeInterval milliseconds apart
+		if (this.updateTimeoutId != null) {
+			clearTimeout(this.updateTimeoutId);
+		}
+		this.updateTimeoutId = setTimeout(this.filterPoints, this.dedupeInterval);
     }
 
     filterPoints()
@@ -43,7 +48,7 @@ class UfoMap {
         console.log("Retrieved data.");
 
         // get the projection we will use in our update function
-        let projection = this.projection;
+        let projection = window.ufoMap.projection;
 
         function updateDataPoints(data)
         {
@@ -68,17 +73,14 @@ class UfoMap {
                 let svg = d3.select("#mapSvg");
 
                 // get points in the map
-                let points = svg.selectAll("circle")
-                    .data(data);
+                let points = svg.selectAll("circle").remove();
 
-                points.exit().remove();
 
                 // update the points with new data
-                points = points
+                points = svg.selectAll("circle")
                     .data(data)
                     .enter()
                     .append("circle")
-                    .merge(points)
                     .attr("r", d => radiusScale(d.SIGHTINGCOUNT))
                     .attr("cx", d => projection([d.LONGITUDE, d.LATITUDE])[0])
                     .attr("cy", d => projection([d.LONGITUDE, d.LATITUDE])[1])
@@ -94,7 +96,7 @@ class UfoMap {
         let shapeClause = window.shapeSelector.getQueryParameters();
 
         // get the values from the database
-        window.ufoDatabase.runQueryWithCallBack('SELECT SUM(ID) AS SIGHTINGCOUNT, LATITUDE, LONGITUDE FROM UFO_REPORTS WHERE ' + dateClause + ' AND ' + shapeClause + ' GROUP BY LATITUDE, LONGITUDE', updateDataPoints);
+        window.ufoDatabase.runQueryWithCallBack('SELECT COUNT(*) AS SIGHTINGCOUNT, LATITUDE, LONGITUDE FROM UFO_REPORTS WHERE ' + dateClause + ' AND ' + shapeClause + ' GROUP BY LATITUDE, LONGITUDE', updateDataPoints);
 
     }
 

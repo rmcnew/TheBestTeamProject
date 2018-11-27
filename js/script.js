@@ -11,6 +11,8 @@
 /* Turn-on strict mode for easier debugging */
 'use strict';
 
+window.ufoDatabase = new UfoDatabase();
+
 // Add a custom toString method to the Date prototype
 if (!Date.prototype.toShortIsoString) {
   (function() {
@@ -45,7 +47,6 @@ d3.json("data_map/usStates.json")
 // Load the data corresponding to all the ufo reports.
 window.shapeSelector = new ShapeSelector();
 window.dateSelector = new DateSelector();
-window.ufoDatabase = new UfoDatabase();
 window.ufoCountGraph = new UfoCountGraph();
 window.ufoDurationGraph = new UfoDurationGraph();
 window.ufoMap.updateMap();

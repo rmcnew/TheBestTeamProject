@@ -60,8 +60,10 @@ class DateSelector {
                 d3.select("#startDate")
                     .property("value", window.dateSelector.dateScale.invert(
                         d3.select("#date-selector-lower").property("value")).toShortIsoString());
-                window.ufoMap.updateMap();
-            });
+            })
+			.on("change", function() {
+				window.ufoMap.updateMap();
+			});
 		dateSelectorDiv.append("input")
 			.attr("id", "date-selector-upper")
 			.attr("type", "range")
@@ -75,8 +77,10 @@ class DateSelector {
                 d3.select("#stopDate")
                     .property("value", window.dateSelector.dateScale.invert(
                         d3.select("#date-selector-upper").property("value")).toShortIsoString());
-                window.ufoMap.updateMap();
-            });
+            })
+			.on("change", function() {
+				window.ufoMap.updateMap();
+			});
         let svg = dateSelectorDiv.append("svg")
             .attr("height", "20")
             .attr("width", dateSelectorDiv.node().getBoundingClientRect().width);
