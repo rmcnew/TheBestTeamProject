@@ -38,30 +38,22 @@ function processMessages() {
                 saveDatabaseToDbFile(filename) 
             } else {
                 console.log("UfoDatabaseWorker:  running query: " + query);
-                let retriesLeft = 3;
+                let queryResult = []; // default to the empty result
                 let rawResult = database.exec(query);
-                console.log("UfoDatabaseWorker:  rawResult: ");
-                console.log(rawResult);
-                let result = rawResult[0];
-                while ((result === undefined) && (retriesLeft > 0)) {
-                    retriesLeft--;
-                    console.warn("UfoDatabaseWorker:  problem with result.  Retrying query . . .");
-                    result = database.exec(query)[0];		
-                }
-                if ((result === undefined) && (retriesLeft <= 0)) {
-                    console.error("UfoDatabaseWorker:  database query failure!  Max retries exceeded. :(");
-                }
-                console.log("UfoDatabaseWorker:  unprocessed query result: ");
-                console.log(result);
-                let resultColumnNames = result.columns;
-                let resultValues = result.values;
-                let queryResult = resultValues.map( value => {
-                    let obj = {};
-                    for (let i = 0; i < value.length; i++) {
-                        obj[resultColumnNames[i]] = value[i];    
+                //console.log("UfoDatabaseWorker:  rawResult: ");
+                //console.log(rawResult);
+                if (rawResult.length === 1) {
+                    let result = rawResult[0];
+                    let resultColumnNames = result.columns;
+                    let resultValues = result.values;
+                    for (let val = 0; val < resultValues.length; val++) {
+                        let row = {}; 
+                        for (let col = 0; col < resultColumnNames.length; col++) {
+                            row[resultColumnNames[col]] = resultValues[val][col];    
+                        }
+                        queryResult.push(row);
                     }
-                    return obj;
-                });
+                }
                 console.log("UfoDatabaseWorker: processed queryResult: ");
                 console.log(queryResult);
                 postMessage({"id": id, "query_result": queryResult});
@@ -75,15 +67,14 @@ function processMessages() {
 function populateDatabaseFromTsv() {
     database = new SQL.Database();
     // create and populate the UFO_REPORTS table
-    let createStatement = 'CREATE TABLE IF NOT EXISTS UFO_REPORTS (ID INTEGER PRIMARY KEY, OCCURRED TEXT, OCCURRED_EPOCH INTEGER, REPORTED TEXT, REPORTED_EPOCH INTEGER, LOCATION STRING, LATITUDE REAL, LONGITUDE REAL, DURATION TEXT, SHAPE TEXT, NARRATIVE TEXT); ';
+    let createStatement = 'CREATE TABLE IF NOT EXISTS UFO_REPORTS (ID INTEGER PRIMARY KEY, OCCURRED TEXT, OCCURRED_EPOCH INTEGER, REPORTED TEXT, REPORTED_EPOCH INTEGER, LOCATION STRING, LATITUDE REAL, LONGITUDE REAL, SHAPE TEXT, DURATION TEXT, NARRATIVE TEXT); ';
     /* creating indices greatly increases the time needed to populate the UFO_REPORTS table  */
     //createStatement += 'CREATE INDEX OCCURRED_EPOCH_INDEX ON UFO_REPORTS(OCCURRED_EPOCH); ';
     //createStatement += 'CREATE INDEX REPORTED_EPOCH_INDEX ON UFO_REPORTS(REPORTED_EPOCH); ';
     //createStatement += 'CREATE INDEX LOCATION_INDEX ON UFO_REPORTS(LOCATION); ';
-    //createStatement += 'CREATE INDEX LATITUDE_INDEX ON UFO_REPORTS(LATITUDE); ';
-    //createStatement += 'CREATE INDEX LONGITUDE_INDEX ON UFO_REPORTS(LONGITUDE); ';
-    //createStatement += 'CREATE INDEX DURATION_INDEX ON UFO_REPORTS(DURATION); ';
+    //createStatement += 'CREATE INDEX LATLONG_INDEX ON UFO_REPORTS(LATITUDE, LONGITUDE); ';
     //createStatement += 'CREATE INDEX SHAPE_INDEX ON UFO_REPORTS(SHAPE); ';
+    //createStatement += 'CREATE INDEX DURATION_INDEX ON UFO_REPORTS(DURATION); ';
     database.run(createStatement);
     console.log("Database table created!");
 

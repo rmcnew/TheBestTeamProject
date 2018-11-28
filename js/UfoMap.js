@@ -73,14 +73,17 @@ class UfoMap {
                 let svg = d3.select("#mapSvg");
 
                 // get points in the map
-                let points = svg.selectAll("circle").remove();
+				let points = svg.selectAll("circle")
+                    .data(data);
 
+                points.exit().remove();
 
                 // update the points with new data
-                points = svg.selectAll("circle")
+                points = points
                     .data(data)
                     .enter()
                     .append("circle")
+                    .merge(points)
                     .attr("r", d => radiusScale(d.SIGHTINGCOUNT))
                     .attr("cx", d => projection([d.LONGITUDE, d.LATITUDE])[0])
                     .attr("cy", d => projection([d.LONGITUDE, d.LATITUDE])[1])
@@ -96,7 +99,7 @@ class UfoMap {
         let shapeClause = window.shapeSelector.getQueryParameters();
 
         // get the values from the database
-        window.ufoDatabase.runQueryWithCallBack('SELECT COUNT(*) AS SIGHTINGCOUNT, LATITUDE, LONGITUDE FROM UFO_REPORTS WHERE ' + dateClause + ' AND ' + shapeClause + ' GROUP BY LATITUDE, LONGITUDE', updateDataPoints);
+        window.ufoDatabase.runQueryWithCallBack('SELECT COUNT(ID) AS SIGHTINGCOUNT, LATITUDE, LONGITUDE FROM UFO_REPORTS WHERE ' + dateClause + ' AND ' + shapeClause + ' GROUP BY LATITUDE, LONGITUDE', updateDataPoints);
 
     }
 
