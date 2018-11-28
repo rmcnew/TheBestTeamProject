@@ -38,9 +38,11 @@ function processMessages() {
                 saveDatabaseToDbFile(filename) 
             } else {
                 console.log("UfoDatabaseWorker:  running query: " + query);
-                let retryMax = 3;
-                let retriesLeft = retryMax;
-                let result = database.exec(query)[0];
+                let retriesLeft = 3;
+                let rawResult = database.exec(query);
+                console.log("UfoDatabaseWorker:  rawResult: ");
+                console.log(rawResult);
+                let result = rawResult[0];
                 while ((result === undefined) && (retriesLeft > 0)) {
                     retriesLeft--;
                     console.warn("UfoDatabaseWorker:  problem with result.  Retrying query . . .");
@@ -127,12 +129,14 @@ function loadDatabaseFromDbFile(filename) {
     xhr.responseType = 'arraybuffer';
 
     xhr.onload = e => {
-        let uInt8Array = new Uint8Array(this.response);
+        //console.log("xhr e:");
+        //console.log(e);
+        let uInt8Array = new Uint8Array(e.target.response);
         database = new SQL.Database(uInt8Array);
+        dataLoaded = true;
+        processMessages();
     };
     xhr.send();
-    dataLoaded = true;
-    processMessages();
 }
 
 function saveDatabaseToDbFile(filename) {
@@ -140,7 +144,11 @@ function saveDatabaseToDbFile(filename) {
 	saveAs(blob, filename);
 }
 
-populateDatabaseFromTsv();
+/* Uncomment to load data from the TSV file.  Be sure to comment out the call to loadDatabaseFromDbFile */
+//populateDatabaseFromTsv();
+
+/* Load the data from the SQLite file */
+loadDatabaseFromDbFile('../data.sqlite');
 
 onmessage = (e) => {
     //console.log("UfoDatabaseWorker:  message received:");
