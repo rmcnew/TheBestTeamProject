@@ -39,6 +39,12 @@ class UfoDatabase {
         this.ufoDatabaseWorker.postMessage(requestObj);
     }
 
+    saveDatabaseToFile(filename) {
+        let requestObj = {"id": this.nextRequestId, "query":"SAVE", "filename":filename};
+        this.nextRequestId++; 
+        this.ufoDatabaseWorker.postMessage(requestObj);
+    }
+
     updateSelectedData() {
         let dateClause = window.dateSelector.getQueryParameters();
         let shapeClause = window.shapeSelector.getQueryParameters();

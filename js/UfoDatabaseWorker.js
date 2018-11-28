@@ -20,6 +20,7 @@ To bypass this limitation and still have the Web SQL APIs in web workers,
 we will use the Emscripten-compiled SQLite javascript library:  https://github.com/kripken/sql.js
 */
 importScripts('sql.js');
+importScripts('FileSaver.js');
 
 let dataLoaded = false;
 let queue = [];
@@ -32,38 +33,39 @@ function processMessages() {
 			let id = message.id;
 			let query = message.query;
             if (query === "SAVE") {
+                let filename = message.filename;
+			    console.log("UfoDatabaseWorker:  Saving database to file: " + filename);
+                saveDatabaseToDbFile(filename) 
+            } else {
+                console.log("UfoDatabaseWorker:  running query: " + query);
+                let retryMax = 3;
+                let retriesLeft = retryMax;
+                let result = database.exec(query)[0];
+                while ((result === undefined) && (retriesLeft > 0)) {
+                    retriesLeft--;
+                    console.warn("UfoDatabaseWorker:  problem with result.  Retrying query . . .");
+                    result = database.exec(query)[0];		
+                }
+                if ((result === undefined) && (retriesLeft <= 0)) {
+                    console.error("UfoDatabaseWorker:  database query failure!  Max retries exceeded. :(");
+                }
+                console.log("UfoDatabaseWorker:  unprocessed query result: ");
+                console.log(result);
+                let resultColumnNames = result.columns;
+                let resultValues = result.values;
+                let queryResult = resultValues.map( value => {
+                    let obj = {};
+                    for (let i = 0; i < value.length; i++) {
+                        obj[resultColumnNames[i]] = value[i];    
+                    }
+                    return obj;
+                });
+                console.log("UfoDatabaseWorker: processed queryResult: ");
+                console.log(queryResult);
+                postMessage({"id": id, "query_result": queryResult});
 
-            } else if (query === "LOAD") {
-
+                message = queue.shift();
             }
-			console.log("UfoDatabaseWorker:  running query: " + query);
-			let retryMax = 3;
-			let retriesLeft = retryMax;
-			let result = database.exec(query)[0];
-			while ((result === undefined) && (retriesLeft > 0)) {
-				retriesLeft--;
-				console.warn("UfoDatabaseWorker:  problem with result.  Retrying query . . .");
-				result = database.exec(query)[0];		
-			}
-			if ((result === undefined) && (retriesLeft <= 0)) {
-				console.error("UfoDatabaseWorker:  database query failure!  Max retries exceeded. :(");
-			}
-			console.log("UfoDatabaseWorker:  unprocessed query result: ");
-			console.log(result);
-			let resultColumnNames = result.columns;
-			let resultValues = result.values;
-			let queryResult = resultValues.map( value => {
-				let obj = {};
-				for (let i = 0; i < value.length; i++) {
-					obj[resultColumnNames[i]] = value[i];    
-				}
-				return obj;
-			});
-			console.log("UfoDatabaseWorker: processed queryResult: ");
-			console.log(queryResult);
-			postMessage({"id": id, "query_result": queryResult});
-
-			message = queue.shift();
 		}
 	}
 }
@@ -129,10 +131,13 @@ function loadDatabaseFromDbFile(filename) {
         database = new SQL.Database(uInt8Array);
     };
     xhr.send();
+    dataLoaded = true;
+    processMessages();
 }
 
 function saveDatabaseToDbFile(filename) {
-
+	let blob = new Blob([database.export()],{type: 'application/x-sqlite-3'});
+	saveAs(blob, filename);
 }
 
 populateDatabaseFromTsv();

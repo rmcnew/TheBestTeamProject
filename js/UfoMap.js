@@ -13,7 +13,7 @@
 
 class UfoMap {
     /*
-    * Map Contstructor
+    * Map Constructor
     */
     constructor(projection, width, height) {
         console.log("constructing map.");

@@ -13,8 +13,20 @@
 
 class UfoCountGraph {
 
-    constructor() {
+    constructor(width, height) {
+/*
+        let countGraphSvg = d3.select("#line-chart")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("id", "ufoCountGraphSvg");
+        let drawCountGraph(data) {
 
+        }
+        window.ufoDatabase.runQueryWithCallBack(
+            "SELECT COUNT(*) FROM UFO_REPORTS WHERE ", 
+            drawCountGraph)
+*/
     }
 
     update() {
