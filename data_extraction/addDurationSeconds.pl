@@ -26,7 +26,7 @@ foreach my $line (<$inputHandle>) {
     my $shape = $8;
     my $duration = $9;
     my $narrative = $10;
-    $duration =~ /(\d{2})\:(\d{2})\:(\d{2})/;
+    $duration =~ /(\d+)\:(\d+)\:(\d+)/;
     my $hours = $1;
     my $minutes = $2;
     my $seconds = $3;
