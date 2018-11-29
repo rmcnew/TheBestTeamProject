@@ -22,7 +22,7 @@ class UfoCountGraph {
             .attr("id", "ufoCountGraphSvg");
 
 		// query to get the needed data
-		this.sqlQuery = "select count(ID) as SIGHTING_COUNT, strftime('%Y', OCCURRED) as SIGHTING_DATE  from UFO_REPORTS group by strftime('%Y', OCCURRED);";
+		this.sqlQuery = "select count(ID) as SIGHTING_COUNT, strftime('%Y', OCCURRED) as SIGHTING_DATE from UFO_REPORTS group by strftime('%Y', OCCURRED);";
 		
 		// callback to draw the graph using the query result data
 		this.drawCountGraph = function(data) {
@@ -41,7 +41,8 @@ class UfoCountGraph {
 				.range([50, svgWidth * 0.95]);
             timeScale.ticks(d3.timeYear.every(1));
             let timeAxis = svg.append("g")
-                .attr("class", "timeAxis")
+                .classed("timeAxis", true)
+                .classed("countGraphData", true)
                 .attr("transform", "translate(0, " + svgHeight * 0.941 + ")")
                 .call(d3.axisBottom(timeScale));
 			// build the count scale			
@@ -53,7 +54,8 @@ class UfoCountGraph {
 				.range([svgHeight * 0.94, 10]);
             countScale.ticks();
             let countAxis = svg.append("g")
-                .attr("class", "countAxis")
+                .classed("countAxis", true)
+                .classed("countGraphData", true)
                 .attr("transform", "translate(50, 0)")
                 .call(d3.axisLeft(countScale));
 			// line generator
@@ -63,14 +65,17 @@ class UfoCountGraph {
             // draw line
             svg.append("path")
                 .datum(data)
-                .attr("class", "ufoCountGraphLine")
+                .classed("ufoCountGraphLine", true)
+                .classed("countGraphData", true)
+                .attr("class", "ufoCountGraphLine countGraphData")
                 .attr("d", line);
             // add data points with tooltips
             svg.selectAll("circle")
                 .data(data)
                 .enter()
                 .append("circle")
-                .attr("class", "ufoCountGraphDataPoint")
+                .classed("ufoCountGraphDataPoint", true)
+                .classed("countGraphData", true)
                 .attr("cx", d => timeScale(new Date(d.SIGHTING_DATE)))
                 .attr("cy", d => countScale(d.SIGHTING_COUNT))
                 .attr("r", 3)
@@ -82,7 +87,15 @@ class UfoCountGraph {
     }
 
     update() {
-
+        // remove previous data
+        d3.selectAll(".countGraphData").remove();
+        let dateClause = window.dateSelector.getQueryParameters();
+        let shapeClause = window.shapeSelector.getQueryParameters();
+        let query = "select count(ID) as SIGHTING_COUNT, strftime('%Y', OCCURRED) as SIGHTING_DATE from UFO_REPORTS where " + 
+                    dateClause + " AND " + shapeClause + " group by strftime('%Y', OCCURRED);";
+        
+        window.ufoDatabase.runQueryWithCallBack(query, this.drawCountGraph);
     }
+
 
 }

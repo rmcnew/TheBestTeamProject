@@ -16,6 +16,13 @@ class ShapeSelector {
     constructor() {
         // since the shapes are static we simply put
         // static checkboxes into the html 
+
+        // add the callbacks for changes in checkboxes
+        d3.selectAll(".shapeCheckbox")
+            .on("click", function() {
+				window.ufoMap.updateMap();
+                window.ufoCountGraph.update();
+            });
     }
 
     getQueryParameters() {

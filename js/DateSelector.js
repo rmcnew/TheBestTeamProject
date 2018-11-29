@@ -63,6 +63,7 @@ class DateSelector {
             })
 			.on("change", function() {
 				window.ufoMap.updateMap();
+                window.ufoCountGraph.update();
 			});
 		dateSelectorDiv.append("input")
 			.attr("id", "date-selector-upper")
@@ -80,6 +81,7 @@ class DateSelector {
             })
 			.on("change", function() {
 				window.ufoMap.updateMap();
+                window.ufoCountGraph.update();
 			});
         let svg = dateSelectorDiv.append("svg")
             .attr("height", "20")
