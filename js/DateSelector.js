@@ -94,8 +94,8 @@ class DateSelector {
     }
 
     getQueryParameters() {
-        let lowerDate = new Date(d3.select("#startDate").property("value")).getTime();
-        let upperDate = new Date(d3.select("#stopDate").property("value")).getTime();
+        let lowerDate = new Date(d3.select("#startDate").property("value")).getTime() / 1000:
+        let upperDate = new Date(d3.select("#stopDate").property("value")).getTime() / 1000;
         return "OCCURRED_EPOCH >= " + lowerDate + " AND OCCURRED_EPOCH <= " + upperDate;
     }
 
