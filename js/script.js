@@ -48,7 +48,7 @@ d3.json("data_map/usStates.json")
 window.shapeSelector = new ShapeSelector();
 window.dateSelector = new DateSelector();
 window.ufoCountGraph = new UfoCountGraph(1000, 500);
-window.ufoDurationGraph = new UfoDurationGraph();
+window.ufoDurationGraph = new UfoDurationGraph(1000, 500);
 window.ufoMap.updateMap();
 window.ufoDetails = new UfoDetails();
 
