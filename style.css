@@ -147,3 +147,15 @@ div#detail-panel {
     stroke: #f7f7f7;
     fill: lightgrey;
 }
+
+.ufoCountGraphLine {
+    fill: none;
+    stroke: darkgreen;
+    stroke-width: 3;
+}
+
+.ufoCountGraphDataPoint {
+    fill: forestgreen;
+    stroke: darkgreen;
+    stroke-width: 1;
+}

@@ -22,10 +22,12 @@ class UfoCountGraph {
             .attr("id", "ufoCountGraphSvg");
 
 		// query to get the needed data
-		this.sqlQuery = "select count(ID) as SIGHTING_COUNT, strftime('%Y-%m', OCCURRED) as SIGHTING_DATE  from UFO_REPORTS group by strftime('%Y-%m', OCCURRED);";
+		this.sqlQuery = "select count(ID) as SIGHTING_COUNT, strftime('%Y', OCCURRED) as SIGHTING_DATE  from UFO_REPORTS group by strftime('%Y', OCCURRED);";
 		
 		// callback to draw the graph using the query result data
 		this.drawCountGraph = function(data) {
+            //console.log("UfoCountGraph.drawCountGraph: data is:");
+            //console.log(data);
 			// get the svg and its dimensions
 			let svg = d3.select("#ufoCountGraphSvg");
 			let svgWidth = svg.node().getBoundingClientRect().width;
@@ -35,20 +37,45 @@ class UfoCountGraph {
 			let maxDate = d3.max(data, d => d.SIGHTING_DATE);
 			console.log("UfoCountGraph:  minDate: " + minDate + ", maxDate: " + maxDate);
 			let timeScale = d3.scaleTime()
-				.domain([minDate, maxDate])
-				.range([0, svgWidth]);
+				.domain([new Date(minDate), new Date(maxDate)])
+				.range([50, svgWidth * 0.95]);
+            timeScale.ticks(d3.timeYear.every(1));
+            let timeAxis = svg.append("g")
+                .attr("class", "timeAxis")
+                .attr("transform", "translate(0, " + svgHeight * 0.941 + ")")
+                .call(d3.axisBottom(timeScale));
 			// build the count scale			
 			let minCount = 0;
 			let maxCount = d3.max(data, d => d.SIGHTING_COUNT);
 			console.log("UfoCountGraph:  minCount: " + minCount + ", maxCount: " + maxCount);
 			let countScale = d3.scaleLinear()
 				.domain([minCount, maxCount])
-				.range([0, svgHeight]);
-			
-/*
+				.range([svgHeight * 0.94, 10]);
+            countScale.ticks();
+            let countAxis = svg.append("g")
+                .attr("class", "countAxis")
+                .attr("transform", "translate(50, 0)")
+                .call(d3.axisLeft(countScale));
+			// line generator
 			let line = d3.line()
-				.x( d => 	
-*/
+				.x( d => timeScale(new Date(d.SIGHTING_DATE)) )
+                .y( d => countScale(d.SIGHTING_COUNT) );
+            // draw line
+            svg.append("path")
+                .datum(data)
+                .attr("class", "ufoCountGraphLine")
+                .attr("d", line);
+            // add data points with tooltips
+            svg.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("class", "ufoCountGraphDataPoint")
+                .attr("cx", d => timeScale(new Date(d.SIGHTING_DATE)))
+                .attr("cy", d => countScale(d.SIGHTING_COUNT))
+                .attr("r", 3)
+                    .append("title")
+                    .text(d => d.SIGHTING_COUNT + " UFO sightings in " + d.SIGHTING_DATE);
 		};
 
         window.ufoDatabase.runQueryWithCallBack(this.sqlQuery, this.drawCountGraph);
