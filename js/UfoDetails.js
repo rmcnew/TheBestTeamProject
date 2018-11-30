@@ -22,7 +22,7 @@ class UfoDetails {
                 d3.select("div#detail-panel").append("p")
                     .attr("id", "narrative_" + x.ID)
                     .classed("narrative", true)
-                    .text("(" + x.ID + ")  " + x.LOCATION + " " + x.OCCURRED + " " + x.NARRATIVE);
+                    .text("(" + x.ID + ")  " + x.LOCATION + " " + x.OCCURRED + ":  " + x.NARRATIVE);
             });
             console.log("populateDetails complete!");
         }
