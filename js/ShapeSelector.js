@@ -24,6 +24,39 @@ class ShapeSelector {
                 window.ufoCountGraph.update();
                 window.ufoDurationGraph.update();
             });
+
+        // add button functionality and callbacks
+        d3.select("#SelectAllShapes")
+            .on("click", function() {
+                d3.selectAll(".shapeCheckbox")
+                    .property("checked", true);
+				window.ufoMap.updateMap();
+                window.ufoCountGraph.update();
+                window.ufoDurationGraph.update();
+            });
+
+        d3.select("#DeselectAllShapes")
+            .on("click", function() {
+                d3.selectAll(".shapeCheckbox")
+                    .property("checked", false);
+				window.ufoMap.updateMap();
+                window.ufoCountGraph.update();
+                window.ufoDurationGraph.update();
+            });
+
+        d3.select("#InvertAllShapes")
+            .on("click", function() {
+                d3.selectAll(".shapeCheckbox")
+                    .each(function() {
+                        let checkbox = d3.select(this);
+                        let checked = checkbox.property("checked");
+                        checkbox.property("checked", !checked); 
+                    });
+				window.ufoMap.updateMap();
+                window.ufoCountGraph.update();
+                window.ufoDurationGraph.update();
+            });
+
     }
 
     getQueryParameters() {
