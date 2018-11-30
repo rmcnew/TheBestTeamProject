@@ -20,9 +20,7 @@ class ShapeSelector {
         // add the callbacks for changes in checkboxes
         d3.selectAll(".shapeCheckbox")
             .on("click", function() {
-				window.ufoMap.updateMap();
-                window.ufoCountGraph.update();
-                window.ufoDurationGraph.update();
+                window.redrawUfoVisualizations()
             });
 
         // add button functionality and callbacks
@@ -30,18 +28,14 @@ class ShapeSelector {
             .on("click", function() {
                 d3.selectAll(".shapeCheckbox")
                     .property("checked", true);
-				window.ufoMap.updateMap();
-                window.ufoCountGraph.update();
-                window.ufoDurationGraph.update();
+                window.redrawUfoVisualizations()
             });
 
         d3.select("#DeselectAllShapes")
             .on("click", function() {
                 d3.selectAll(".shapeCheckbox")
                     .property("checked", false);
-				window.ufoMap.updateMap();
-                window.ufoCountGraph.update();
-                window.ufoDurationGraph.update();
+                window.redrawUfoVisualizations()
             });
 
         d3.select("#InvertAllShapes")
@@ -52,9 +46,7 @@ class ShapeSelector {
                         let checked = checkbox.property("checked");
                         checkbox.property("checked", !checked); 
                     });
-				window.ufoMap.updateMap();
-                window.ufoCountGraph.update();
-                window.ufoDurationGraph.update();
+                window.redrawUfoVisualizations()
             });
 
     }
