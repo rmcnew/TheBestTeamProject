@@ -28,6 +28,9 @@ class DateSelector {
                 d3.select("#date-selector-lower")
                     .property("value", window.dateSelector.dateScale(
                         new Date(d3.select("#startDate").property("value"))));
+				window.ufoMap.updateMap();
+                window.ufoCountGraph.update();
+                window.ufoDurationGraph.update();
             });
 
 		d3.select("#stopDate")
@@ -38,6 +41,9 @@ class DateSelector {
                 d3.select("#date-selector-upper")
                     .property("value", window.dateSelector.dateScale(
                         new Date(d3.select("#stopDate").property("value"))));
+				window.ufoMap.updateMap();
+                window.ufoCountGraph.update();
+                window.ufoDurationGraph.update();
             });
 
         let dateSelectorDiv = d3.select("#date-selector");
@@ -64,6 +70,7 @@ class DateSelector {
 			.on("change", function() {
 				window.ufoMap.updateMap();
                 window.ufoCountGraph.update();
+                window.ufoDurationGraph.update();
 			});
 		dateSelectorDiv.append("input")
 			.attr("id", "date-selector-upper")
@@ -82,6 +89,7 @@ class DateSelector {
 			.on("change", function() {
 				window.ufoMap.updateMap();
                 window.ufoCountGraph.update();
+                window.ufoDurationGraph.update();
 			});
         let svg = dateSelectorDiv.append("svg")
             .attr("height", "20")

@@ -33,6 +33,27 @@ if (!Date.prototype.toShortIsoString) {
   }());
 }
 
+
+// duration to string conversion
+window.durationToString = function(duration) {
+    let durationString = "";
+    let parts = duration.split(':');  
+    let hours = parseInt(parts[0]);
+    let minutes = parseInt(parts[1]);
+    let seconds = parseInt(parts[2]);
+    if (hours > 0) {
+        durationString += hours + " hours ";
+    }
+    if (minutes > 0) {
+        durationString += minutes + " minutes ";
+    }
+    if (seconds > 0) {
+        durationString += seconds + " seconds";
+    }
+    return durationString;
+}
+
+
 let tooltip = new Tooltip();
 window.ufoMap = new UfoMap(d3.geoAlbersUsa(), 1000, 500);
 

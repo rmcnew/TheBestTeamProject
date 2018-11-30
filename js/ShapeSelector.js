@@ -22,6 +22,7 @@ class ShapeSelector {
             .on("click", function() {
 				window.ufoMap.updateMap();
                 window.ufoCountGraph.update();
+                window.ufoDurationGraph.update();
             });
     }
 

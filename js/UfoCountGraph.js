@@ -15,7 +15,7 @@ class UfoCountGraph {
 
     constructor(width, height) {
 		// create the target SVG
-        this.countGraphSvg = d3.select("#line-chart")
+        this.countGraphSvg = d3.select("#count-chart")
             .append("svg")
             .attr("width", width)
             .attr("height", height)
@@ -43,8 +43,18 @@ class UfoCountGraph {
             let timeAxis = svg.append("g")
                 .classed("timeAxis", true)
                 .classed("countGraphData", true)
+                .attr("id", "ufoCountGraphTimeAxis")
                 .attr("transform", "translate(0, " + svgHeight * 0.941 + ")")
                 .call(d3.axisBottom(timeScale));
+            let timeAxisLabel = d3.select("#ufoCountGraphTimeAxis")
+                .append("text")
+                .attr("id", "ufoCountGraphTimeAxisLabel")
+                .classed("ufoCountGraphAxisLabel", true)
+                .attr("text-anchor", "end")
+                .attr("x", svgWidth / 2)
+                .attr("y", 28)
+                .attr("fill", "black")
+                .text("Year");
 			// build the count scale			
 			let minCount = 0;
 			let maxCount = d3.max(data, d => d.SIGHTING_COUNT);
@@ -56,8 +66,19 @@ class UfoCountGraph {
             let countAxis = svg.append("g")
                 .classed("countAxis", true)
                 .classed("countGraphData", true)
+                .attr("id", "ufoCountGraphCountAxis")
                 .attr("transform", "translate(50, 0)")
                 .call(d3.axisLeft(countScale));
+            let countAxisLabel = d3.select("#ufoCountGraphCountAxis")
+                .append("text")
+                .attr("id", "ufoCountGraphCountAxisLabel")
+                .classed("ufoCountGraphAxisLabel", true)
+                .attr("text-anchor", "middle")
+                .attr("x", -svgHeight / 2)
+                .attr("y", -40)
+                .attr("transform", "rotate(-90)")
+                .attr("fill", "black")
+                .text("UFO Sighting Count");
 			// line generator
 			let line = d3.line()
 				.x( d => timeScale(new Date(d.SIGHTING_DATE)) )
