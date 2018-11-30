@@ -13,47 +13,6 @@
 
 window.ufoDatabase = new UfoDatabase();
 
-// Add a custom toString method to the Date prototype
-if (!Date.prototype.toShortIsoString) {
-  (function() {
-    function pad(number) {
-      if (number < 10) {
-        return '0' + number;
-      }
-      return number;
-    }
-
-    Date.prototype.toShortIsoString = function() {
-      return this.getUTCFullYear() +
-        '-' + pad(this.getUTCMonth() + 1) +
-        '-' + pad(this.getUTCDate()) +
-        'T' + pad(this.getUTCHours()) +
-        ':' + pad(this.getUTCMinutes());
-	};
-  }());
-}
-
-
-// duration to string conversion
-window.durationToString = function(duration) {
-    let durationString = "";
-    let parts = duration.split(':');  
-    let hours = parseInt(parts[0]);
-    let minutes = parseInt(parts[1]);
-    let seconds = parseInt(parts[2]);
-    if (hours > 0) {
-        durationString += hours + " hours ";
-    }
-    if (minutes > 0) {
-        durationString += minutes + " minutes ";
-    }
-    if (seconds > 0) {
-        durationString += seconds + " seconds";
-    }
-    return durationString;
-}
-
-
 let tooltip = new Tooltip();
 window.ufoMap = new UfoMap(d3.geoAlbersUsa(), 1000, 500);
 

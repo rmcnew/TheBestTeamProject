@@ -14,20 +14,36 @@
 class UfoDetails {
 
     constructor() {
-        window.ufoDatabase.runQueryWithCallBack("SELECT ID, NARRATIVE FROM UFO_REPORTS", function(data) {
+
+        this.sqlQuery = "SELECT ID, LOCATION, OCCURRED, NARRATIVE FROM UFO_REPORTS";
+
+        this.createNarratives = function(data) {
             data.forEach( x => {
-                //console.log(`Adding UFO details: ID: ${x.ID}, Narrative: ${x.NARRATIVE}`);
                 d3.select("div#detail-panel").append("p")
                     .attr("id", "narrative_" + x.ID)
-                    .text("(" + x.ID + ")  " + x.NARRATIVE);
+                    .classed("narrative", true)
+                    .text("(" + x.ID + ")  " + x.LOCATION + " " + x.OCCURRED + ":  " + x.NARRATIVE);
             });
             console.log("populateDetails complete!");
-        });
+        }
+
+        window.ufoDatabase.runQueryWithCallBack(this.sqlQuery, this.createNarratives);    
     }
 
 
     update() {
-
+        // hide all the data
+        d3.selectAll(".narrative").style("display", "none");
+        // get query parameters 
+        let dateClause = window.dateSelector.getQueryParameters();
+        let shapeClause = window.shapeSelector.getQueryParameters();
+        let query = this.sqlQuery + " where " + dateClause + " AND " + shapeClause + ";";
+        // unhide the selected data
+        window.ufoDatabase.runQueryWithCallBack(query, function(data) {
+            data.forEach( x => {
+                d3.select("#narrative_" + x.ID).style("display", "");
+            });
+        });    
     }
 
 }
