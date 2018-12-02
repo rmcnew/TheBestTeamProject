@@ -20,6 +20,7 @@ To bypass this limitation and still have the Web SQL APIs in web workers,
 we will use the Emscripten-compiled SQLite javascript library:  https://github.com/kripken/sql.js
 */
 importScripts('sql.js');
+//importScripts('sql-debug.js');
 importScripts('FileSaver.js');
 
 let dataLoaded = false;
@@ -55,7 +56,7 @@ function processMessages() {
                     }
                 }
                 console.log("UfoDatabaseWorker: processed queryResult: ");
-                console.log(queryResult);
+                //console.log(queryResult);
                 postMessage({"id": id, "query_result": queryResult});
 
                 message = queue.shift();

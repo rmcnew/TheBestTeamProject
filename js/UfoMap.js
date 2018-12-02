@@ -54,20 +54,21 @@ class UfoMap {
         {
             if (typeof data !== "undefined") {
 
-                // set radious scales
-                let counts = data.map(d => d.SIGHTINGCOUNT);
-                let max = d3.max(counts);
-
+                if (window.maxSightings == 0)
+                {
+                    // set radious scales
+                    let counts = data.map(d => d.SIGHTINGCOUNT);
+                    window.maxSightings = d3.max(counts);
+                }
                 let radiusScale = d3.scaleLinear()
-                  .domain([0, max])
+                  .domain([0, window.maxSightings])
                   .range([1.5, 20])
                 ;
 
                 let opacityScale = d3.scaleLinear()
-                  .domain([0, max])
+                  .domain([0, window.maxSightings])
                   .range([0.4, 1])
                 ;
-
 
                 // get the svg element for the map
                 let svg = d3.select("#mapSvg");
