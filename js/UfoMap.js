@@ -131,7 +131,6 @@ class UfoMap {
                 .attr("id", "mapSvg")
                 .attr("width", width)
                 .attr("height", height)
-                .classed("map", true)
             ;
         }
 
