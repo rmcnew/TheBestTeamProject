@@ -126,6 +126,15 @@ input[type="range"]#date-selector-upper::-webkit-slider-thumb {
     cursor: pointer;
 }
 
+.view {
+    display:grid;
+    border:double;
+}
+
+.viewLabel {
+    
+    font-weight: bold;
+}
 
 div#detail-panel {
     height: 100vh;
