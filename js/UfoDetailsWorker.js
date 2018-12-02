@@ -11,6 +11,7 @@
 /* Turn-on strict mode for easier debugging */
 'use strict';
 
+importScripts('d3.js');
 // web worker to perform lunr.js index loading and searches in background
 importScripts('lunr.js');
 
@@ -41,12 +42,15 @@ function processMessages() {
 }
 
 function loadIndexFromFile() {
-    index = lunr.Index.load(JSON.parse('../ufoNarrativesIndex.json'));
-    dataLoaded = true;
+    d3.json('../ufoNarrativesIndex.json').then(function(jsonData) {
+        index = lunr.Index.load(jsonData);
+        dataLoaded = true;
+        processMessages();
+    });
 }
 
 
-//loadIndexFromFile();
+loadIndexFromFile();
 
 onmessage = (e) => {
 	queue.push(e.data);

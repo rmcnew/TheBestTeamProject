@@ -64,6 +64,8 @@ class UfoDetails {
 
 
     update() {
+        // clear search textbox
+        d3.select("#narrativeSearchInput").property("value", "");
         // hide all the data
         d3.selectAll(".narrative").style("display", "none");
         // get query parameters 
