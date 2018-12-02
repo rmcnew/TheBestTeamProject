@@ -16,6 +16,8 @@ window.ufoDatabase = new UfoDatabase();
 let tooltip = new Tooltip();
 window.ufoMap = new UfoMap(d3.geoAlbersUsa(), 1000, 500);
 
+window.maxSightings = 0;
+
 d3.json("data_map/usStates.json")
     .then(function (states) {
         d3.json("data_map/usCounties.json")
