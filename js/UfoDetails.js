@@ -6,7 +6,7 @@
 	A Numbers:	     A01108018	               A02077329
 
     Copyright (C) 2018, Jonathon Pearson.
-    Copyright (C) 2018, Richard Scott McNew.  
+    Copyright (C) 2018, Richard Scott McNew.
 */
 /* Turn-on strict mode for easier debugging */
 'use strict';
@@ -26,21 +26,41 @@ class UfoDetails {
             }
             this.requestMap.delete(id);
         };
+        this.searchResultIds = null;
 
 		// wire search input field to work search
 		d3.select("#narrativeSearchInput")
 			.on("change", function() {
 				let search = d3.select("#narrativeSearchInput").property("value");
-				window.ufoDetails.runSearchWithCallBack(search, function(data) {
-        			d3.selectAll(".narrative").style("display", "none");
-					data.forEach( x => {
-						d3.select("#narrative_" + x).style("display", "");
-					});
-				});
+                if (search !== "") {
+                    window.ufoDetails.runSearchWithCallBack(search, function(data) {
+                        window.ufoDetails.searchResultIds = data;
+                        window.redrawUfoVisualizations()
+                    });
+                } else { // the search box is empty
+                    window.ufoDetails.searchResultIds = null;
+                    window.redrawUfoVisualizations()
+                }
 			});
+        d3.select("#clearNarrativeSearchButton")
+            .on("click", function() {
+                d3.select("#narrativeSearchInput").property("value", "");
+                window.ufoDetails.searchResultIds = null;
+                window.redrawUfoVisualizations()
+            });
+        d3.select("#searchNarrativeSearchButton")
+            .on("click", function() {
+				let search = d3.select("#narrativeSearchInput").property("value");
+                if (search !== "") {
+                    window.ufoDetails.runSearchWithCallBack(search, function(data) {
+                        window.ufoDetails.searchResultIds = data;
+                        window.redrawUfoVisualizations()
+                    });
+                }
+            });
 
         this.sqlQuery = "SELECT ID, LOCATION, OCCURRED, NARRATIVE FROM UFO_REPORTS";
-	
+
         this.createNarratives = function(data) {
             data.forEach( x => {
                 d3.select("div#detail-panel").append("p")
@@ -51,34 +71,39 @@ class UfoDetails {
             console.log("populateDetails complete!");
         }
 
-        window.ufoDatabase.runQueryWithCallBack(this.sqlQuery, this.createNarratives);    
+        window.ufoDatabase.runQueryWithCallBack(this.sqlQuery, this.createNarratives);
     }
 
 	runSearchWithCallBack(search, callBack) {
         let requestObj = {"id": this.nextRequestId, "search":search};
         this.requestMap.set(this.nextRequestId, callBack);
-        this.nextRequestId++; 
+        this.nextRequestId++;
         this.ufoDetailsWorker.postMessage(requestObj);
     }
 
-
+    getQueryParameters() {
+        let whereClause = "ID != 0";
+        if (this.searchResultIds !== null) {
+            whereClause = "ID IN (" + this.searchResultIds.join(", ") + ")";
+        }
+        return whereClause;
+    }
 
     update() {
-        // clear search textbox
-        d3.select("#narrativeSearchInput").property("value", "");
         // hide all the data
         d3.selectAll(".narrative").style("display", "none");
-        // get query parameters 
+        // get query parameters
         let dateClause = window.dateSelector.getQueryParameters();
         let shapeClause = window.shapeSelector.getQueryParameters();
         let mapClause = window.ufoMap.getQueryParameters();
-        let query = this.sqlQuery + " where " + dateClause + " AND " + shapeClause + " AND " + mapClause + ";";
+        let detailsClause = window.ufoDetails.getQueryParameters();
+        let query = "SELECT ID FROM UFO_REPORTS WHERE " + dateClause + " AND " + shapeClause + " AND " + detailsClause + " AND " + mapClause + " ORDER BY ID;";
         // unhide the selected data
         window.ufoDatabase.runQueryWithCallBack(query, function(data) {
             data.forEach( x => {
                 d3.select("#narrative_" + x.ID).style("display", "");
             });
-        });    
+        });
     }
 
 }

@@ -42,7 +42,7 @@ function processMessages() {
 }
 
 function loadIndexFromFile() {
-    d3.json('../ufoNarrativesIndex.json').then(function(jsonData) {
+    d3.json('../NarrativesIndex.json').then(function(jsonData) {
         index = lunr.Index.load(jsonData);
         dataLoaded = true;
         processMessages();

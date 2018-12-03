@@ -6,7 +6,7 @@
 	A Numbers:	     A01108018	               A02077329
 
     Copyright (C) 2018, Jonathon Pearson.
-    Copyright (C) 2018, Richard Scott McNew.  
+    Copyright (C) 2018, Richard Scott McNew.
 */
 /* Turn-on strict mode for easier debugging */
 'use strict';
@@ -23,7 +23,7 @@ class UfoCountGraph {
 
 		// query to get the needed data
 		this.sqlQuery = "select count(ID) as SIGHTING_COUNT, strftime('%Y', OCCURRED) as SIGHTING_DATE from UFO_REPORTS group by strftime('%Y', OCCURRED);";
-		
+
 		// callback to draw the graph using the query result data
 		this.drawCountGraph = function(data) {
             //console.log("UfoCountGraph.drawCountGraph: data is:");
@@ -55,7 +55,7 @@ class UfoCountGraph {
                 .attr("y", 28)
                 .attr("fill", "black")
                 .text("Year");
-			// build the count scale			
+			// build the count scale
 			let minCount = 0;
 			let maxCount = d3.max(data, d => d.SIGHTING_COUNT);
 			console.log("UfoCountGraph:  minCount: " + minCount + ", maxCount: " + maxCount);
@@ -113,9 +113,10 @@ class UfoCountGraph {
         let dateClause = window.dateSelector.getQueryParameters();
         let shapeClause = window.shapeSelector.getQueryParameters();
         let mapClause = window.ufoMap.getQueryParameters();
-        let query = "select count(ID) as SIGHTING_COUNT, strftime('%Y', OCCURRED) as SIGHTING_DATE from UFO_REPORTS where " + 
-                    dateClause + " AND " + shapeClause + " AND " + mapClause + " group by strftime('%Y', OCCURRED);";
-        
+        let detailsClause = window.ufoDetails.getQueryParameters();
+        let query = "select count(ID) as SIGHTING_COUNT, strftime('%Y', OCCURRED) as SIGHTING_DATE from UFO_REPORTS where " +
+                    dateClause + " AND " + shapeClause + " AND " + detailsClause + " AND " + mapClause + " group by strftime('%Y', OCCURRED);";
+
         window.ufoDatabase.runQueryWithCallBack(query, this.drawCountGraph);
     }
 

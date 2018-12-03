@@ -100,9 +100,11 @@ class UfoMap {
         // get shape clause
         let dateClause = window.dateSelector.getQueryParameters();
         let shapeClause = window.shapeSelector.getQueryParameters();
+        let detailsClause = window.ufoDetails.getQueryParameters();
 
         // get the values from the database
-        window.ufoDatabase.runQueryWithCallBack('SELECT COUNT(ID) AS SIGHTINGCOUNT, LATITUDE, LONGITUDE FROM UFO_REPORTS WHERE ' + dateClause + ' AND ' + shapeClause + ' GROUP BY LATITUDE, LONGITUDE', updateDataPoints);
+        window.ufoDatabase.runQueryWithCallBack('SELECT COUNT(ID) AS SIGHTINGCOUNT, LATITUDE, LONGITUDE FROM UFO_REPORTS WHERE ' + 
+            dateClause + ' AND ' + shapeClause + ' AND ' + detailsClause + ' GROUP BY LATITUDE, LONGITUDE', updateDataPoints);
 
     }
 
