@@ -23,7 +23,9 @@ class UfoMap {
         this.height = height;
         this.maxSightings = null;
 		this.updateTimeoutId = null;
-		this.dedupeInterval = 120; // milliseconds
+		this.dedupeInterval = 60; // milliseconds
+		this.mouseLocation1 = null;
+		this.mouseLocation2 = null;
     }
 
     clearMap() {
@@ -143,9 +145,12 @@ class UfoMap {
           .projection(this.projection)
         ;
 
+        // get counties and states
+        let counties = svg.selectAll(".county").data(mapCountyData.features);
+        let states = svg.selectAll(".state").data(mapStateData.features);
+
         // add counties
-        svg.selectAll(".county")
-          .data(mapCountyData.features)
+        counties
           .enter()
           .append("path")
           .attr("d", d => path(d))
@@ -154,8 +159,7 @@ class UfoMap {
         ;
 
         // add states
-        svg.selectAll(".state")
-          .data(mapStateData.features)
+        states
           .enter()
           .append("path")
           .attr("d", d => path(d))
@@ -163,6 +167,155 @@ class UfoMap {
           .classed("state", true)
         ;
 
+        // Get the selected area
+        svg
+            .append("path")
+            .attr("id", "selectedArea")
+            .classed("selected", true)
+            .attr("d", "")
+        ;
+
+        // add mouse events
+        svg
+            .on("mousedown", this.onMouseDown)
+            .on("mouseup", this.onMouseUp);
+    }
+
+    // Get the current mouse location
+    onMouseDown() {
+        // Get the current mouse location
+        window.ufoMap.mouseLocation1 = [d3.event.clientX, d3.event.clientY];
+
+        // get the map
+        let svg = d3.select("#mapSvg");
+
+        // get the bounding box for the map
+        let box = svg.node().getBoundingClientRect();
+
+        // add point where clicked
+        svg
+            .append("circle")
+            .attr("id", "clickLoc1")
+            .attr("cx", window.ufoMap.mouseLocation1[0] - box.left)
+            .attr("cy", window.ufoMap.mouseLocation1[1] - box.top)
+            .attr("fill", "darkblue")
+            .attr("r", "5")
+        ;
+    }
+
+    onMouseUp() {
+        window.ufoMap.mouseLocation2 = [d3.event.clientX, d3.event.clientY];
+
+        // get the bounding box for the map
+        let box = d3.select("#mapSvg").node().getBoundingClientRect();
+
+        // get adjusted mouse clicks
+        let adjustLocation1 = [window.ufoMap.mouseLocation1[0] - box.left, window.ufoMap.mouseLocation1[1] - box.top];
+        let adjustLocation2 = [window.ufoMap.mouseLocation2[0] - box.left, window.ufoMap.mouseLocation2[1] - box.top];
+
+        // get the projection we will use in our 
+        let projection = window.ufoMap.projection;
+
+        let point1 = projection.invert(adjustLocation1);
+        let point2 = projection.invert([adjustLocation2[0], adjustLocation1[1]]);
+        let point3 = projection.invert(adjustLocation2);
+        let point4 = projection.invert([adjustLocation1[0], adjustLocation2[1]]);
+
+        let selectedRect = {
+            "type": "FeatureCollection",
+            "features": [
+              {
+                  "type": "Feature",
+                  "geometry": {
+                      "type": "Polygon",
+                      "coordinates": [[point1, point2, point3, point4, point1]]
+                  },
+                  "properties": { "name": "selectedArea" }
+              }
+            ]
+        };
+
+        // get the map
+        let svg = d3.select("#mapSvg");
+
+        // create map control
+        let path = d3.geoPath()
+          .projection(projection)
+        ;
+
+        // Get the selected area
+        let selectedArea = svg.select("#selectedArea");
+
+        // if this path doesn't already exists, add it
+        if (selectedArea.empty())
+        {
+            // add path
+            selectedArea = svg
+                .append("path")
+                .attr("id", "selectedArea")
+                .classed("selected", true)
+            ;
+
+        }
+
+        // add selected area
+        selectedArea.attr("d", path(selectedRect));
+
+        // remove the point used for a reference
+        d3.select("#clickLoc1").remove();
+
+        // query the database for all other visualizations
+        window.redrawUfoVisualizationsWOMap();
+    }
+
+    resize()
+    {
+        // get map control
+        let map = d3.select("#map").attr("class", "map");
+
+        let width = map.node().getBoundingClientRect().width;
+        let height = map.node().getBoundingClientRect().height;
+
+        // get the svg element for the map
+        let svg = map.select("#mapSvg");
+        // make sure that the SVG element actually exists
+        if (!svg.empty()) {
+            svg = map.select("#mapSvg")
+                .attr("width", width)
+                .attr("height", height)
+            ;
+        }
+
+    }
+
+    getQueryParameters() {
+        // get the bounding box for the map
+        let box = d3.select("#mapSvg").node().getBoundingClientRect();
+
+        // get adjusted locations
+        let adjustLocation1 = [window.ufoMap.mouseLocation1[0] - box.left, window.ufoMap.mouseLocation1[1] - box.top];
+        let adjustLocation2 = [window.ufoMap.mouseLocation2[0] - box.left, window.ufoMap.mouseLocation2[1] - box.top];
+
+        // get the projection we will use in our 
+        let projection = window.ufoMap.projection;
+
+        // get lat/long values
+        let point1 = projection.invert(adjustLocation1);
+        let point2 = projection.invert(adjustLocation2);
+
+        if (point1[0] == point2[0] && point1[1] == point2[1])
+            return "1 = 1";
+        else if (point1[0] <= point2[0] && point1[1] >= point2[1])
+        {
+            return "LATITUDE <= " + point1[1] + " AND LATITUDE >= " + point2[1] + " AND LONGITUDE >= " + point1[0] + " AND LONGITUDE <= " + point2[0];
+        } else if (point1[0] >= point2[0] && point1[1] <= point2[1]) {
+            return "LATITUDE >= " + point1[1] + " AND LATITUDE <= " + point2[1] + " AND LONGITUDE <= " + point1[0] + " AND LONGITUDE >= " + point2[0];
+        } else if (point1[0] >= point2[0] && point1[1] >= point2[1])
+        {
+            return "(LATITUDE >= " + point1[1] + " OR LATITUDE <= " + point2[1] + ") AND (LONGITUDE >= " + point1[0] + " OR LONGITUDE <= " + point2[0] + ")";
+        } else if (point1[0] <= point2[0] && point1[1] <= point2[1]) {
+            return "(LATITUDE <= " + point1[1] + " OR LATITUDE >= " + point2[1] + ") AND (LONGITUDE <= " + point1[0] + " OR LONGITUDE >= " + point2[0] + ")";
+        }
     }
 
 }

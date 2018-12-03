@@ -36,9 +36,10 @@ h1 {
 }
 
 .selected{
-	stroke: #404040;;
+	stroke: darkblue;
+    fill: blue;
 	stroke-width:4;
-	r:20px;
+    fill-opacity:0.25;
 }
 
 
@@ -111,9 +112,12 @@ input[type="range"].multirange.upper {
 .map {
     width:70vw;
     height:60vh;
+    float:left;
+}
+
+#mapSvg {
     border:double;
     background-color: lightblue;
-    float:left;
 }
 
 .state {
@@ -148,9 +152,8 @@ div#detail-panel {
 	left: 0;
     overflow-x: hidden;
     overflow-y: scroll;
-    padding-left:0.25%;
-    padding-right:0.25%
-
+    padding-left:1%;
+    padding-right:1%;
 }
 
 .point {

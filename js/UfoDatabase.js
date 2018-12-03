@@ -6,16 +6,16 @@
 	A Numbers:	     A01108018	               A02077329
 
     Copyright (C) 2018, Jonathon Pearson.
-    Copyright (C) 2018, Richard Scott McNew.  
+    Copyright (C) 2018, Richard Scott McNew.
 */
 /* Turn-on strict mode for easier debugging */
 'use strict';
 
-class UfoDatabase { 
+class UfoDatabase {
 
     constructor() {
         this.ufoDatabaseWorker = new Worker('js/UfoDatabaseWorker.js');
-        this.requestMap = new Map();        
+        this.requestMap = new Map();
         this.nextRequestId = 1;
         this.ufoDatabaseWorker.onmessage = (e) => {
             //console.log("UfoDatabase: ready for callback:");
@@ -35,22 +35,23 @@ class UfoDatabase {
     runQueryWithCallBack(query, callBack) {
         let requestObj = {"id": this.nextRequestId, "query":query};
         this.requestMap.set(this.nextRequestId, callBack);
-        this.nextRequestId++; 
+        this.nextRequestId++;
         this.ufoDatabaseWorker.postMessage(requestObj);
     }
 
     saveDatabaseToFile(filename) {
         let requestObj = {"id": this.nextRequestId, "query":"SAVE", "filename":filename};
-        this.nextRequestId++; 
+        this.nextRequestId++;
         this.ufoDatabaseWorker.postMessage(requestObj);
     }
 
     updateSelectedData() {
         let dateClause = window.dateSelector.getQueryParameters();
         let shapeClause = window.shapeSelector.getQueryParameters();
+        let mapClause = window.ufoMap.getQueryParameters();
         let detailsClause = window.ufoDetails.getQueryParameters();
-        let query = 'SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS WHERE ' + 
-            dateClause + ' AND ' + shapeClause + ' AND ' + detailsClause + ';';
+        let query = 'SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS WHERE ' +
+            dateClause + ' AND ' + shapeClause + ' AND ' + detailsClause + ' AND ' + mapClause + ';';
         console.log("Running query: " + query);
         this.runQueryWithCallBack(query, function(result) {
             this.selectedData = result;

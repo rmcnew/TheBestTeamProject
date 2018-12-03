@@ -6,7 +6,7 @@
 	A Numbers:	     A01108018	               A02077329
 
     Copyright (C) 2018, Jonathon Pearson.
-    Copyright (C) 2018, Richard Scott McNew.  
+    Copyright (C) 2018, Richard Scott McNew.
 */
 /* Turn-on strict mode for easier debugging */
 'use strict';
@@ -20,7 +20,7 @@ class UfoDurationGraph {
             .attr("width", width)
             .attr("height", height)
             .attr("id", "ufoDurationGraphSvg");
-        
+
 		// query to get the needed data
         this.sqlQuery = "select count(ID) as SIGHTING_COUNT, DURATION, DURATION_SECONDS from UFO_REPORTS group by DURATION_SECONDS order by DURATION_SECONDS;";
 
@@ -100,10 +100,11 @@ class UfoDurationGraph {
         d3.selectAll(".durationGraphData").remove();
         let dateClause = window.dateSelector.getQueryParameters();
         let shapeClause = window.shapeSelector.getQueryParameters();
+        let mapClause = window.ufoMap.getQueryParameters();
         let detailsClause = window.ufoDetails.getQueryParameters();
-        let query = "select count(ID) as SIGHTING_COUNT, DURATION, DURATION_SECONDS from UFO_REPORTS where " + 
-                    dateClause + " AND " + shapeClause + " AND " + detailsClause  + " group by DURATION_SECONDS order by DURATION_SECONDS;";
-        
+        let query = "select count(ID) as SIGHTING_COUNT, DURATION, DURATION_SECONDS from UFO_REPORTS where " +
+                    dateClause + " AND " + shapeClause + " AND " + detailsClause + " AND " + mapClause + " group by DURATION_SECONDS order by DURATION_SECONDS;";
+
         window.ufoDatabase.runQueryWithCallBack(query, this.drawDurationGraph);
     }
 

@@ -34,6 +34,11 @@ if (!Date.prototype.toShortIsoString) {
 // UI elements to refresh based on user input
 window.redrawUfoVisualizations = function() {
     window.ufoMap.updateMap();
+    window.redrawUfoVisualizationsWOMap();
+}
+
+// Refresh all except the map
+window.redrawUfoVisualizationsWOMap = function () {
     window.ufoDetails.update();
     window.ufoCountGraph.update();
     window.ufoDurationGraph.update();
