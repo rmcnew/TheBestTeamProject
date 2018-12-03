@@ -31,7 +31,7 @@ class UfoDatabase {
         };
     }
 
-    // This funciton requires a call back function that accepts an array as input
+    // This function requires a call back function that accepts an array as input
     runQueryWithCallBack(query, callBack) {
         let requestObj = {"id": this.nextRequestId, "query":query};
         this.requestMap.set(this.nextRequestId, callBack);
