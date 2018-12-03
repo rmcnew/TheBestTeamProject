@@ -71,7 +71,8 @@ class UfoDetails {
         // get query parameters 
         let dateClause = window.dateSelector.getQueryParameters();
         let shapeClause = window.shapeSelector.getQueryParameters();
-        let query = this.sqlQuery + " where " + dateClause + " AND " + shapeClause + ";";
+        let mapClause = window.ufoMap.getQueryParameters();
+        let query = this.sqlQuery + " where " + dateClause + " AND " + shapeClause + " AND " + mapClause + ";";
         // unhide the selected data
         window.ufoDatabase.runQueryWithCallBack(query, function(data) {
             data.forEach( x => {
