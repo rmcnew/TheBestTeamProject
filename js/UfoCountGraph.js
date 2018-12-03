@@ -112,8 +112,9 @@ class UfoCountGraph {
         d3.selectAll(".countGraphData").remove();
         let dateClause = window.dateSelector.getQueryParameters();
         let shapeClause = window.shapeSelector.getQueryParameters();
+        let detailsClause = window.ufoDetails.getQueryParameters();
         let query = "select count(ID) as SIGHTING_COUNT, strftime('%Y', OCCURRED) as SIGHTING_DATE from UFO_REPORTS where " + 
-                    dateClause + " AND " + shapeClause + " group by strftime('%Y', OCCURRED);";
+                    dateClause + " AND " + shapeClause + " AND " + detailsClause + " group by strftime('%Y', OCCURRED);";
         
         window.ufoDatabase.runQueryWithCallBack(query, this.drawCountGraph);
     }

@@ -48,7 +48,9 @@ class UfoDatabase {
     updateSelectedData() {
         let dateClause = window.dateSelector.getQueryParameters();
         let shapeClause = window.shapeSelector.getQueryParameters();
-        let query = 'SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS WHERE ' + dateClause + ' AND ' + shapeClause;
+        let detailsClause = window.ufoDetails.getQueryParameters();
+        let query = 'SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS WHERE ' + 
+            dateClause + ' AND ' + shapeClause + ' AND ' + detailsClause + ';';
         console.log("Running query: " + query);
         this.runQueryWithCallBack(query, function(result) {
             this.selectedData = result;

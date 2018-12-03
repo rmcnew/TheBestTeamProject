@@ -14,8 +14,8 @@
 class DateSelector {
 
     constructor() {
-        this.minDate = "1921-04-25T21:30";
-        this.maxDate = "2018-10-23T06:05";
+        this.minDate = "1921-04-25T20:00";
+        this.maxDate = "2018-10-23T06:15";
         let widthScaleFactor = 0.8;
         //console.log("min date: " + this.minDate);
         //console.log("max date: " + this.maxDate);

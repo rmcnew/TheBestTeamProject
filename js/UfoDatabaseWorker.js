@@ -38,7 +38,7 @@ function processMessages() {
 			    console.log("UfoDatabaseWorker:  Saving database to file: " + filename);
                 saveDatabaseToDbFile(filename) 
             } else {
-                console.log("UfoDatabaseWorker:  running query: " + query);
+                //console.log("UfoDatabaseWorker:  running query: " + query);
                 let queryResult = []; // default to the empty result
                 let rawResult = database.exec(query);
                 //console.log("UfoDatabaseWorker:  rawResult: ");
@@ -55,7 +55,7 @@ function processMessages() {
                         queryResult.push(row);
                     }
                 }
-                console.log("UfoDatabaseWorker: processed queryResult: ");
+                //console.log("UfoDatabaseWorker: processed queryResult: ");
                 //console.log(queryResult);
                 postMessage({"id": id, "query_result": queryResult});
 

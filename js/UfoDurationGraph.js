@@ -100,8 +100,9 @@ class UfoDurationGraph {
         d3.selectAll(".durationGraphData").remove();
         let dateClause = window.dateSelector.getQueryParameters();
         let shapeClause = window.shapeSelector.getQueryParameters();
+        let detailsClause = window.ufoDetails.getQueryParameters();
         let query = "select count(ID) as SIGHTING_COUNT, DURATION, DURATION_SECONDS from UFO_REPORTS where " + 
-                    dateClause + " AND " + shapeClause + " group by DURATION_SECONDS order by DURATION_SECONDS;";
+                    dateClause + " AND " + shapeClause + " AND " + detailsClause  + " group by DURATION_SECONDS order by DURATION_SECONDS;";
         
         window.ufoDatabase.runQueryWithCallBack(query, this.drawDurationGraph);
     }
