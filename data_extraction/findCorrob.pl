@@ -119,13 +119,11 @@ for (my $id = 1; $id <= $LAST_ID; $id++) {
 		my $distanceBetweenReports = distance($currentLatitude, $currentLongitude, $temporallyCloseLatitude, $temporallyCloseLongitude, 'M');
 		if (($distanceBetweenReports <= $MAX_DISTANCE_BETWEEN_REPORTS) && ($currentShape eq $temporallyCloseShape)) {
 			# print "$temporallyCloseId on $temporallyCloseOccurredEpoch at ($temporallyCloseLatitude, $temporallyCloseLongitude) may corroborate:  $id on $currentOccurredEpoch at ($currentLatitude, $currentLongitude)\n";
-			
-			if (exists $corrob{$temporallyCloseId}) { # there is already an entry for this report
-				my $corrobSet = $corrob{$temporallyCloseId};
-				$corrobSet->insert($id);
+			if (exists $corrob{$id}) { # there is already an entry for this report
+                my $corrobSet = $corrob{$id};
+				$corrobSet->insert($temporallyCloseId);
 			} else { # no previous entries exist, create a new one
 				my $corrobSet = Set::Scalar->new;
-				$corrobSet->insert($id);
 				$corrobSet->insert($temporallyCloseId);
 				$corrob{$id} = $corrobSet;
 			}
@@ -134,7 +132,8 @@ for (my $id = 1; $id <= $LAST_ID; $id++) {
 }
 
 # print out results
-foreach my $key (sort keys %corrob) {
+foreach my $key (sort {$a <=> $b} keys %corrob) {
 	my $set = $corrob{$key};
-	print "$key -> $set\n";
+    my @setMembers = $set->members;
+	print "$key\t@setMembers\n";
 } 
