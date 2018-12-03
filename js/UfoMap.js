@@ -24,8 +24,8 @@ class UfoMap {
         this.maxSightings = null;
 		this.updateTimeoutId = null;
 		this.dedupeInterval = 60; // milliseconds
-		this.mouseLocation1 = null;
-		this.mouseLocation2 = null;
+		this.mouseLocation1 = [0,0];
+		this.mouseLocation2 = [0,0];
     }
 
     clearMap() {
