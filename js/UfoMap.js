@@ -303,7 +303,9 @@ class UfoMap {
         let point1 = projection.invert(adjustLocation1);
         let point2 = projection.invert(adjustLocation2);
 
-        if (point1[0] <= point2[0] && point1[1] >= point2[1])
+        if (point1[0] == point2[0] && point1[1] == point2[1])
+            return "1 = 1";
+        else if (point1[0] <= point2[0] && point1[1] >= point2[1])
         {
             return "LATITUDE <= " + point1[1] + " AND LATITUDE >= " + point2[1] + " AND LONGITUDE >= " + point1[0] + " AND LONGITUDE <= " + point2[0];
         } else if (point1[0] >= point2[0] && point1[1] <= point2[1]) {

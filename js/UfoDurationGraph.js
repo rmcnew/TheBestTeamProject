@@ -103,7 +103,7 @@ class UfoDurationGraph {
         let mapClause = window.ufoMap.getQueryParameters();
         let detailsClause = window.ufoDetails.getQueryParameters();
         let query = "select count(ID) as SIGHTING_COUNT, DURATION, DURATION_SECONDS from UFO_REPORTS where " +
-                    dateClause + " AND " + shapeClause + " AND " + detailsClause + mapClause  + " group by DURATION_SECONDS order by DURATION_SECONDS;";
+                    dateClause + " AND " + shapeClause + " AND " + detailsClause + " AND " + mapClause + " group by DURATION_SECONDS order by DURATION_SECONDS;";
 
         window.ufoDatabase.runQueryWithCallBack(query, this.drawDurationGraph);
     }
