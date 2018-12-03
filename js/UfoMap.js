@@ -23,7 +23,9 @@ class UfoMap {
         this.height = height;
         this.maxSightings = null;
 		this.updateTimeoutId = null;
-		this.dedupeInterval = 120; // milliseconds
+		this.dedupeInterval = 60; // milliseconds
+		this.mouseLocation1 = null;
+		this.mouseLocation2 = null;
     }
 
     clearMap() {
@@ -160,6 +162,113 @@ class UfoMap {
           .attr("id", d => d.id)
           .classed("state", true)
         ;
+
+        // add mouse events
+        svg
+            .on("mousedown", this.onMouseDown)
+            .on("mouseup", this.onMouseUp);
+    }
+
+    // Get the current mouse location
+    onMouseDown() {
+        // Get the current mouse location
+        this.mouseLocation1 = [d3.event.clientX, d3.event.clientY];
+
+        // get the map
+        let svg = d3.select("#mapSvg");
+
+        // get the bounding box for the map
+        let box = svg.node().getBoundingClientRect();
+
+        // add point where clicked
+        svg
+            .append("circle")
+            .attr("id", "clickLoc1")
+            .attr("cx", this.mouseLocation1[0] - box.left)
+            .attr("cy", this.mouseLocation1[1] - box.top)
+            .attr("fill", "darkblue")
+            .attr("r", "5")
+        ;
+    }
+
+    onMouseUp() {
+        this.mouseLocation2 = [d3.event.clientX, d3.event.clientY];
+
+        // get the bounding box for the map
+        let box = d3.select("#mapSvg").node().getBoundingClientRect();
+
+        // get adjusted mouse clicks
+        let adjustLocation1 = [this.mouseLocation1[0] - box.left, this.mouseLocation1[1] - box.top];
+        let adjustLocation2 = [this.mouseLocation2[0] - box.left, this.mouseLocation2[1] - box.top];
+
+        // get the projection we will use in our 
+        let projection = window.ufoMap.projection;
+
+        let point1 = projection.invert(adjustLocation1);
+        let point2 = projection.invert([adjustLocation2[0], adjustLocation1[1]]);
+        let point3 = projection.invert(adjustLocation2);
+        let point4 = projection.invert([adjustLocation1[0], adjustLocation2[1]]);
+
+        let selectedRect = {
+            "type": "FeatureCollection",
+            "features": [
+              {
+                  "type": "Feature",
+                  "geometry": {
+                      "type": "Polygon",
+                      "coordinates": [[point1, point2, point3, point4, point1]]
+                  },
+                  "properties": { "name": "selectedArea" }
+              }
+            ]
+        };
+
+        // get the map
+        let svg = d3.select("#mapSvg");
+
+        // create map control
+        let path = d3.geoPath()
+          .projection(projection)
+        ;
+
+        // Get the selected area
+        let selectedArea = svg.select("#selectedArea");
+
+        // if this path doesn't already exists, add it
+        if (selectedArea.empty())
+        {
+            // add path
+            selectedArea = svg
+                .append("path")
+                .attr("id", "selectedArea")
+                .classed("selected", true)
+            ;
+
+        }
+
+        // add selected area
+        selectedArea.attr("d", path(selectedRect));
+
+        d3.select("#clickLoc1").remove();
+    }
+
+    resize()
+    {
+        // get map control
+        let map = d3.select("#map").attr("class", "map");
+
+        let width = map.node().getBoundingClientRect().width;
+        let height = map.node().getBoundingClientRect().height;
+
+        // get the svg element for the map
+        let svg = map.select("#mapSvg");
+        // make sure that the SVG element actually exists
+        if (!svg.empty()) {
+            svg = map.select("#mapSvg")
+                .attr("width", width)
+                .attr("height", height)
+            ;
+        }
 
     }
 

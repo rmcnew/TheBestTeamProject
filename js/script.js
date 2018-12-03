@@ -34,3 +34,7 @@ window.ufoDurationGraph = new UfoDurationGraph(1000, 500);
 window.ufoMap.updateMap();
 window.ufoDetails = new UfoDetails();
 
+function resize()
+{
+    window.ufoMap.resize();
+}
