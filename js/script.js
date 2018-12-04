@@ -29,8 +29,8 @@ d3.json("data_map/usStates.json")
 // Load the data corresponding to all the ufo reports.
 window.shapeSelector = new ShapeSelector();
 window.dateSelector = new DateSelector();
-window.ufoCountGraph = new UfoCountGraph(1000, 500);
-window.ufoDurationGraph = new UfoDurationGraph(1000, 500);
+window.ufoCountGraph = new UfoCountGraph(500, 300);
+window.ufoDurationGraph = new UfoDurationGraph(500, 300);
 window.ufoMap.updateMap();
 window.ufoDetails = new UfoDetails();
 
