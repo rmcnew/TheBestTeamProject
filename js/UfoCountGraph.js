@@ -35,7 +35,7 @@ class UfoCountGraph {
 			// build the time scale
 			let minDate = d3.min(data, d => d.SIGHTING_DATE);
 			let maxDate = d3.max(data, d => d.SIGHTING_DATE);
-			console.log("UfoCountGraph:  minDate: " + minDate + ", maxDate: " + maxDate);
+			//console.log("UfoCountGraph:  minDate: " + minDate + ", maxDate: " + maxDate);
 			let timeScale = d3.scaleTime()
 				.domain([new Date(minDate), new Date(maxDate)])
 				.range([50, svgWidth * 0.95]);
@@ -58,7 +58,7 @@ class UfoCountGraph {
 			// build the count scale
 			let minCount = 0;
 			let maxCount = d3.max(data, d => d.SIGHTING_COUNT);
-			console.log("UfoCountGraph:  minCount: " + minCount + ", maxCount: " + maxCount);
+			//console.log("UfoCountGraph:  minCount: " + minCount + ", maxCount: " + maxCount);
 			let countScale = d3.scaleLinear()
 				.domain([minCount, maxCount])
 				.range([svgHeight * 0.94, 10]);
@@ -114,8 +114,9 @@ class UfoCountGraph {
         let shapeClause = window.shapeSelector.getQueryParameters();
         let mapClause = window.ufoMap.getQueryParameters();
         let detailsClause = window.ufoDetails.getQueryParameters();
+        let corrobClause = window.ufoCorroborated.getQueryParameters();
         let query = "select count(ID) as SIGHTING_COUNT, strftime('%Y', OCCURRED) as SIGHTING_DATE from UFO_REPORTS where " +
-                    dateClause + " AND " + shapeClause + " AND " + detailsClause + " AND " + mapClause + " group by strftime('%Y', OCCURRED);";
+                    dateClause + " AND " + shapeClause + " AND " + detailsClause + " AND " + mapClause + " AND " + corrobClause + " group by strftime('%Y', OCCURRED);";
 
         window.ufoDatabase.runQueryWithCallBack(query, this.drawCountGraph);
     }
