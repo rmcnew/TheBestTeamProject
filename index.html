@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<!-- 
+<!--
     CS-5890 Project:  UFO Report Explorer
     The Best Team
 	Team Members:	 Jonathon Pearson	       Richard Scott McNew
@@ -8,7 +8,7 @@
 	A Numbers:	     A01108018	               A02077329
 
     Copyright (C) 2018, Jonathon Pearson.
-    Copyright (C) 2018, Richard Scott McNew.  
+    Copyright (C) 2018, Richard Scott McNew.
 -->
     <head>
         <meta charset="UTF-8">
@@ -29,12 +29,12 @@
         <p class="info">See the screencast: <a href="#intro-video"><b>see below</b></a></p>
 		<div id="date-selector" class="fullView">
             <label for="startDate">Start Date</label>
-            <input type="datetime" id="startDate" name="startDate" class="dateSelect"/>	
+            <input type="datetime" id="startDate" name="startDate" class="dateSelect"/>
             <label for="stopDate">Stop Date</label>
-            <input type="datetime" id="stopDate" name="stopDate" class="dateSelect"/>	
+            <input type="datetime" id="stopDate" name="stopDate" class="dateSelect"/>
 		</div>
 
-        
+
         <label id="SelectorTitle" for="UfoShapeSelector">UFO Shape Selector</label>
 		<div id="ufo-shape-selector" class="view" name="UfoShapeSelector">
             <span>
@@ -85,7 +85,7 @@
                 <label for="Triangle">Triangle</label>
             </span>
 		</div>
-		
+
         <div id="Corrob" class="view">
             <label id="CorrobLabel" for="CorrobSelector">Only Show Corroborated Reports</label>
             <input type="checkbox" id="CorrobSelector" class="corrobCheckbox"/>
@@ -114,6 +114,29 @@
         <div >
             <iframe id="intro-video" src="https://www.youtube.com/embed/8sZ1n0Hr0EM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
+
+        <div id="screencast">
+            <h4>Demo Screencast</h4>
+        </div>
+
+		<a href="#openModal" id="openModalLink" style="display:none">Open Modal</a>
+		<div id="openModal" class="modalDialog">
+			<div>
+				<a href="#close" title="Close" class="close">X</a>
+				<center>
+					<h3>Welcome to the</h3>
+					<img src="favicon.png" height="150"/>
+					<h1>UFO Report Explorer</h1>
+				</center>
+				<p>Have you ever wondered if we are not alone in the universe?</p>
+				<p>Could there be visitors from other worlds who are watching?</p>
+				<p><b>We know that the truth is out there.</b></p>
+				<p>By analyzing UFO sighting reports from the National UFO Reporting Center and creating visualizations we hope to find answers and discover the truth.</p>
+				<p>There is a lot of data to examine.</p>
+				<p>Please be patient as it loads and as the visualizations update.</p>
+				<p>Data source:  <a href="http://www.nuforc.org/webreports.html">NUFORC</a></p>
+			</div>
+		</div>
 
         <script type="application/javascript" src="js/tooltip.js"></script>
         <script type="application/javascript" src="js/UfoDatabase.js"></script>

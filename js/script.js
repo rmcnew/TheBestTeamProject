@@ -39,3 +39,7 @@ function resize()
 {
     window.ufoMap.resize();
 }
+
+window.onload = function() {
+	document.getElementById('openModalLink').click();
+}
