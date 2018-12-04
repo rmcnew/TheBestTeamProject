@@ -13,9 +13,14 @@
 
 class UfoDurationGraph {
 
-    constructor(width, height) {
+    constructor() {
+        let durationChart = d3.select("#duration-chart");
+
+        let width = durationChart.node().getBoundingClientRect().width;
+        let height = durationChart.node().getBoundingClientRect().height;
+
 		// create the target SVG
-        this.durationGraphSvg = d3.select("#duration-chart")
+        this.durationGraphSvg = durationChart
             .append("svg")
             .attr("width", width)
             .attr("height", height)
@@ -29,7 +34,7 @@ class UfoDurationGraph {
 		this.drawDurationGraph = function(data) {
 			let svg = d3.select("#ufoDurationGraphSvg");
 			let svgWidth = svg.node().getBoundingClientRect().width;
-			let svgHeight = svg.node().getBoundingClientRect().height;
+			let svgHeight = svg.node().getBoundingClientRect().height * 0.9;
             // build the duration scale
             let minDuration = 0;
             let maxDuration = d3.max(data, d => d.DURATION_SECONDS);

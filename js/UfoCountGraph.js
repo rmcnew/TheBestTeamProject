@@ -13,9 +13,15 @@
 
 class UfoCountGraph {
 
-    constructor(width, height) {
-		// create the target SVG
-        this.countGraphSvg = d3.select("#count-chart")
+    constructor() {
+
+        // get the width and height of the current chart
+        let countChart = d3.select("#count-chart");
+        let width = countChart.node().getBoundingClientRect().width;
+        let height = countChart.node().getBoundingClientRect().height;
+        
+        // create the target SVG
+        this.countGraphSvg = countChart
             .append("svg")
             .attr("width", width)
             .attr("height", height)
@@ -31,7 +37,7 @@ class UfoCountGraph {
 			// get the svg and its dimensions
 			let svg = d3.select("#ufoCountGraphSvg");
 			let svgWidth = svg.node().getBoundingClientRect().width;
-			let svgHeight = svg.node().getBoundingClientRect().height;
+			let svgHeight = svg.node().getBoundingClientRect().height * 0.9;
 			// build the time scale
 			let minDate = d3.min(data, d => d.SIGHTING_DATE);
 			let maxDate = d3.max(data, d => d.SIGHTING_DATE);
@@ -52,7 +58,7 @@ class UfoCountGraph {
                 .classed("ufoCountGraphAxisLabel", true)
                 .attr("text-anchor", "end")
                 .attr("x", svgWidth / 2)
-                .attr("y", 28)
+                .attr("y", 26)
                 .attr("fill", "black")
                 .text("Year");
 			// build the count scale

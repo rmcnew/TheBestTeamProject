@@ -109,16 +109,21 @@ input[type="range"].multirange.upper {
 }
 
 .map {
-    width:70vw;
+    width:65vw;
     height:60vh;
     float:left;
 }
 
 #count-chart {
+    height:30vh;
+    width: 45vw;
     float:left;
 }
 
 #duration-chart {
+    height:30vh;
+    width: 45vw;
+    float:left;
 }
 
 #mapSvg {
