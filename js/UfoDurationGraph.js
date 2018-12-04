@@ -13,9 +13,14 @@
 
 class UfoDurationGraph {
 
-    constructor(width, height) {
+    constructor() {
+        let durationChart = d3.select("#duration-chart");
+
+        let width = durationChart.node().getBoundingClientRect().width;
+        let height = durationChart.node().getBoundingClientRect().height;
+
 		// create the target SVG
-        this.durationGraphSvg = d3.select("#duration-chart")
+        this.durationGraphSvg = durationChart
             .append("svg")
             .attr("width", width)
             .attr("height", height)

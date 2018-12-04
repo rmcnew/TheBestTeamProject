@@ -13,9 +13,15 @@
 
 class UfoCountGraph {
 
-    constructor(width, height) {
-		// create the target SVG
-        this.countGraphSvg = d3.select("#count-chart")
+    constructor() {
+
+        // get the width and height of the current chart
+        let countChart = d3.select("#count-chart");
+        let width = countChart.node().getBoundingClientRect().width;
+        let height = countChart.node().getBoundingClientRect().height;
+        
+        // create the target SVG
+        this.countGraphSvg = countChart
             .append("svg")
             .attr("width", width)
             .attr("height", height)
