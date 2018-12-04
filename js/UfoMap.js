@@ -16,8 +16,8 @@ class UfoMap {
     * Map Constructor
     */
     constructor(projection, width, height) {
-        console.log("constructing map.");
-        console.log(projection);
+        //console.log("constructing map.");
+        //console.log(projection);
         this.projection = projection;
         this.width = width;
         this.height = height;
@@ -42,12 +42,11 @@ class UfoMap {
 		this.updateTimeoutId = setTimeout(this.filterPoints, this.dedupeInterval);
     }
 
-    filterPoints()
-    {
-        console.log("Filtering results.");
+    filterPoints() {
+        //console.log("Filtering results.");
 
         // get the filtered data set
-        console.log("Retrieved data.");
+        //console.log("Retrieved data.");
 
         // get the projection we will use in our update function
         let projection = window.ufoMap.projection;
@@ -101,10 +100,11 @@ class UfoMap {
         let dateClause = window.dateSelector.getQueryParameters();
         let shapeClause = window.shapeSelector.getQueryParameters();
         let detailsClause = window.ufoDetails.getQueryParameters();
+        let corrobClause = window.ufoCorroborated.getQueryParameters();
 
         // get the values from the database
         window.ufoDatabase.runQueryWithCallBack('SELECT COUNT(ID) AS SIGHTINGCOUNT, LATITUDE, LONGITUDE FROM UFO_REPORTS WHERE ' + 
-            dateClause + ' AND ' + shapeClause + ' AND ' + detailsClause + ' GROUP BY LATITUDE, LONGITUDE', updateDataPoints);
+            dateClause + ' AND ' + shapeClause + ' AND ' + detailsClause + ' AND ' + corrobClause + ' GROUP BY LATITUDE, LONGITUDE', updateDataPoints);
 
     }
 
@@ -114,11 +114,11 @@ class UfoMap {
      * mapCountyData is the geojson data of the Counties.
      */
     drawMap(mapStateData, mapCountyData) {
-        console.log("Drawing map.");
-        console.log("States:");
-        console.log(mapStateData);
-        console.log("Counties:");
-        console.log(mapCountyData);
+        //console.log("Drawing map.");
+        //console.log("States:");
+        //console.log(mapStateData);
+        //console.log("Counties:");
+        //console.log(mapCountyData);
 
         // get map control
         let map = d3.select("#map").attr("class", "map");

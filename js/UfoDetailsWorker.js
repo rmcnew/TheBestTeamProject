@@ -26,14 +26,14 @@ function processMessages() {
 		while (message !== undefined) {
 			let id = message.id;
 			let search = message.search;
-            console.log("UfoDetailsWorker:  running search: " + search);
+            //console.log("UfoDetailsWorker:  running search: " + search);
             let searchResult = []; // default to the empty result
             let rawResult = index.search(search);
             if (rawResult.length >= 1) {
                 searchResult = rawResult.map( r => r.ref );
             }
-            console.log("UfoDetailsWorker: processed searchResult: ");
-            console.log(searchResult);
+            //console.log("UfoDetailsWorker: processed searchResult: ");
+            //console.log(searchResult);
             postMessage({"id": id, "search_result": searchResult});
 
             message = queue.shift();

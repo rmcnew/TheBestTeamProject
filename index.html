@@ -26,13 +26,14 @@
         <h1>UFO Report Explorer</h1>
         <p class="info">Name: Jonathon Pearson; E-Mail: jnewellpearson@gmail.com; A#: A01108018</p>
         <p class="info">Name: Richard Scott McNew; E-Mail: richard.scott.mcnew@gmail.com; A#: A02077329</p>
-
+        <p class="info">See the screencast: <b>URL goes here</b></p>
 		<div id="date-selector" class="fullView">
             <label for="startDate">Start Date</label>
             <input type="datetime" id="startDate" name="startDate" class="dateSelect"/>	
             <label for="stopDate">Stop Date</label>
             <input type="datetime" id="stopDate" name="stopDate" class="dateSelect"/>	
 		</div>
+
         
         <label id="SelectorTitle" for="UfoShapeSelector">UFO Shape Selector</label>
 		<div id="ufo-shape-selector" class="view" name="UfoShapeSelector">
@@ -85,6 +86,11 @@
             </span>
 		</div>
 		
+        <div id="Corrob" class="view">
+            <label id="CorrobLabel" for="CorrobSelector">Only Show Corroborated Reports</label>
+            <input type="checkbox" id="CorrobSelector" class="corrobCheckbox"/>
+        </div>
+
         <div id = "map" class = "view">
         </div>
 
@@ -106,6 +112,7 @@
 
         <script type="application/javascript" src="js/tooltip.js"></script>
         <script type="application/javascript" src="js/UfoDatabase.js"></script>
+        <script type="application/javascript" src="js/UfoCorroborated.js"></script>
         <script type="application/javascript" src="js/ShapeSelector.js"></script>
         <script type="application/javascript" src="js/DateSelector.js"></script>
         <script type="application/javascript" src="js/UfoDetails.js"></script>

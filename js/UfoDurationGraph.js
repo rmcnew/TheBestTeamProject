@@ -38,7 +38,7 @@ class UfoDurationGraph {
             // build the duration scale
             let minDuration = 0;
             let maxDuration = d3.max(data, d => d.DURATION_SECONDS);
-            console.log("UfoDurationGraph: minDuration: " + minDuration + ", maxDuration: " + maxDuration);
+            //console.log("UfoDurationGraph: minDuration: " + minDuration + ", maxDuration: " + maxDuration);
             let durationScale = d3.scaleLinear()
                 .domain([minDuration, maxDuration])
 				.range([50, svgWidth * 0.95]);
@@ -61,7 +61,7 @@ class UfoDurationGraph {
             // build the count scale
 			let minCount = 0;
 			let maxCount = d3.max(data, d => d.SIGHTING_COUNT);
-			console.log("UfoDurationGraph:  minCount: " + minCount + ", maxCount: " + maxCount);
+			//console.log("UfoDurationGraph:  minCount: " + minCount + ", maxCount: " + maxCount);
 			let countScale = d3.scaleLinear()
 				.domain([minCount, maxCount])
 				.range([svgHeight * 0.94, 10]);
@@ -107,8 +107,10 @@ class UfoDurationGraph {
         let shapeClause = window.shapeSelector.getQueryParameters();
         let mapClause = window.ufoMap.getQueryParameters();
         let detailsClause = window.ufoDetails.getQueryParameters();
+        let corrobClause = window.ufoCorroborated.getQueryParameters();
         let query = "select count(ID) as SIGHTING_COUNT, DURATION, DURATION_SECONDS from UFO_REPORTS where " +
-                    dateClause + " AND " + shapeClause + " AND " + detailsClause + " AND " + mapClause + " group by DURATION_SECONDS order by DURATION_SECONDS;";
+                    dateClause + " AND " + shapeClause + " AND " + detailsClause + " AND " + mapClause + " AND " + 
+                    corrobClause + " group by DURATION_SECONDS order by DURATION_SECONDS;";
 
         window.ufoDatabase.runQueryWithCallBack(query, this.drawDurationGraph);
     }

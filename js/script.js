@@ -31,6 +31,7 @@ window.shapeSelector = new ShapeSelector();
 window.dateSelector = new DateSelector();
 window.ufoCountGraph = new UfoCountGraph();
 window.ufoDurationGraph = new UfoDurationGraph();
+window.ufoCorroborated = new UfoCorroborated();
 window.ufoMap.updateMap();
 window.ufoDetails = new UfoDetails();
 

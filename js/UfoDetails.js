@@ -59,16 +59,38 @@ class UfoDetails {
                 }
             });
 
-        this.sqlQuery = "SELECT ID, LOCATION, OCCURRED, NARRATIVE FROM UFO_REPORTS";
+        this.sqlQuery = "SELECT UFO_REPORTS.ID AS ID, UFO_REPORTS.LOCATION AS LOCATION, UFO_REPORTS.OCCURRED AS OCCURRED, UFO_REPORTS.NARRATIVE AS NARRATIVE, UFO_CORROB.CORROB AS CORROB FROM UFO_REPORTS LEFT OUTER JOIN UFO_CORROB ON UFO_REPORTS.ID = UFO_CORROB.ID";
 
         this.createNarratives = function(data) {
             data.forEach( x => {
-                d3.select("div#detail-panel").append("p")
+                let item = d3.select("div#detail-panel").append("p")
                     .attr("id", "narrative_" + x.ID)
+                    .attr("tabindex", x.ID)
                     .classed("narrative", true)
                     .text("(" + x.ID + ")  " + x.LOCATION + " " + x.OCCURRED + ":  " + x.NARRATIVE);
+                if (x.CORROB !== null) {
+                    if (x.CORROB.includes(" ")) {
+                        let corrobs = x.CORROB.split(" ");
+                        corrobs.forEach( c => {
+                            item.append("input")
+                                .attr("type", "button")
+                                .attr("value", c)
+                                .on("click", function() {
+                                    d3.select("#narrative_" + c).node().focus();
+                                });
+                        });
+                    } else {
+                        let c = x.CORROB;
+                        item.append("input")
+                            .attr("type", "button")
+                            .attr("value", c)
+                            .on("click", function() {
+                                d3.select("#narrative_" + c).node().focus();
+                            });
+                    }
+                } 
             });
-            console.log("populateDetails complete!");
+            //console.log("populateDetails complete!");
         }
 
         window.ufoDatabase.runQueryWithCallBack(this.sqlQuery, this.createNarratives);
@@ -97,7 +119,9 @@ class UfoDetails {
         let shapeClause = window.shapeSelector.getQueryParameters();
         let mapClause = window.ufoMap.getQueryParameters();
         let detailsClause = window.ufoDetails.getQueryParameters();
-        let query = "SELECT ID FROM UFO_REPORTS WHERE " + dateClause + " AND " + shapeClause + " AND " + detailsClause + " AND " + mapClause + " ORDER BY ID;";
+        let corrobClause = window.ufoCorroborated.getQueryParameters();
+        let query = "SELECT ID FROM UFO_REPORTS WHERE " + 
+            dateClause + " AND " + shapeClause + " AND " + detailsClause + " AND " + mapClause + " AND " + corrobClause +  " ORDER BY ID;";
         // unhide the selected data
         window.ufoDatabase.runQueryWithCallBack(query, function(data) {
             data.forEach( x => {

@@ -62,3 +62,4 @@ window.durationToString = function(duration) {
     }
     return durationString;
 }
+

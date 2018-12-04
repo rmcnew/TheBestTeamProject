@@ -45,18 +45,4 @@ class UfoDatabase {
         this.ufoDatabaseWorker.postMessage(requestObj);
     }
 
-    updateSelectedData() {
-        let dateClause = window.dateSelector.getQueryParameters();
-        let shapeClause = window.shapeSelector.getQueryParameters();
-        let mapClause = window.ufoMap.getQueryParameters();
-        let detailsClause = window.ufoDetails.getQueryParameters();
-        let query = 'SELECT ID, OCCURRED, REPORTED, LOCATION, LATITUDE, LONGITUDE, DURATION, SHAPE, NARRATIVE FROM UFO_REPORTS WHERE ' +
-            dateClause + ' AND ' + shapeClause + ' AND ' + detailsClause + ' AND ' + mapClause + ';';
-        console.log("Running query: " + query);
-        this.runQueryWithCallBack(query, function(result) {
-            this.selectedData = result;
-            console.log("query result in selectedData ready!");
-        });
-    }
-
 }
