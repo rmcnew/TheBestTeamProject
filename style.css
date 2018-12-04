@@ -115,6 +115,13 @@ input[type="range"].multirange.upper {
     float:left;
 }
 
+#count-chart {
+    float:left;
+}
+
+#duration-chart {
+}
+
 #mapSvg {
     border:double;
     background-color: lightblue;
