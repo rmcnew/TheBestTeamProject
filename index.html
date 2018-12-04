@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<!-- 
+<!--
     CS-5890 Project:  UFO Report Explorer
     The Best Team
 	Team Members:	 Jonathon Pearson	       Richard Scott McNew
@@ -8,7 +8,7 @@
 	A Numbers:	     A01108018	               A02077329
 
     Copyright (C) 2018, Jonathon Pearson.
-    Copyright (C) 2018, Richard Scott McNew.  
+    Copyright (C) 2018, Richard Scott McNew.
 -->
     <head>
         <meta charset="UTF-8">
@@ -26,15 +26,15 @@
         <h1>UFO Report Explorer</h1>
         <p class="info">Name: Jonathon Pearson; E-Mail: jnewellpearson@gmail.com; A#: A01108018</p>
         <p class="info">Name: Richard Scott McNew; E-Mail: richard.scott.mcnew@gmail.com; A#: A02077329</p>
-        <p class="info">See the screencast: <b>URL goes here</b></p>
+        <p class="info">See the screencast: <a href="#intro-video"><b>see below</b></a></p>
 		<div id="date-selector" class="fullView">
             <label for="startDate">Start Date</label>
-            <input type="datetime" id="startDate" name="startDate" class="dateSelect"/>	
+            <input type="datetime" id="startDate" name="startDate" class="dateSelect"/>
             <label for="stopDate">Stop Date</label>
-            <input type="datetime" id="stopDate" name="stopDate" class="dateSelect"/>	
+            <input type="datetime" id="stopDate" name="stopDate" class="dateSelect"/>
 		</div>
 
-        
+
         <label id="SelectorTitle" for="UfoShapeSelector">UFO Shape Selector</label>
 		<div id="ufo-shape-selector" class="view" name="UfoShapeSelector">
             <span>
@@ -85,7 +85,7 @@
                 <label for="Triangle">Triangle</label>
             </span>
 		</div>
-		
+
         <div id="Corrob" class="view">
             <label id="CorrobLabel" for="CorrobSelector">Only Show Corroborated Reports</label>
             <input type="checkbox" id="CorrobSelector" class="corrobCheckbox"/>
@@ -111,7 +111,9 @@
         </div>
 
         <div id="screencast">
+            <br />
             <h4>Demo Screencast</h4>
+            <iframe id="intro-video" src="https://www.youtube.com/embed/8sZ1n0Hr0EM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
 
 		<a href="#openModal" id="openModalLink" style="display:none">Open Modal</a>
@@ -128,7 +130,7 @@
 				<p><b>We know that the truth is out there.</b></p>
 				<p>By analyzing UFO sighting reports from the National UFO Reporting Center and creating visualizations we hope to find answers and discover the truth.</p>
 				<p>There is a lot of data to examine.</p>
-				<p>Please be patient as it loads and as the visualizations update.</p> 
+				<p>Please be patient as it loads and as the visualizations update.</p>
 				<p>Data source:  <a href="http://www.nuforc.org/webreports.html">NUFORC</a></p>
 			</div>
 		</div>

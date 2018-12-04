@@ -196,6 +196,17 @@ div#detail-panel {
     stroke-width: 1;
 }
 
+#screencast {
+    display:block;
+    padding: 7vh 30vw 7vh 30vh;
+    float:left;
+}
+
+#intro-video {
+    width:60vw;
+    height: 33.75vw;
+    float:left;
+}
 #overlay div {
      width:300px;
      margin: 100px auto;
@@ -258,5 +269,3 @@ div#detail-panel {
 }
 
 .close:hover { background: #00d9ff; }
-
-
