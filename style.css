@@ -196,3 +196,11 @@ div#detail-panel {
     stroke: darkgreen;
     stroke-width: 1;
 }
+
+#intro-video {
+    width:60vw; 
+    height: 33.75vw;
+    display:block;
+    padding: 7vh 30vw 7vh 30vh;
+    float:left;
+}
